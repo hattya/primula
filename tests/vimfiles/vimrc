@@ -1,0 +1,14 @@
+set lazyredraw
+let &runtimepath = expand('<sfile>:p:h')
+
+function! s:vim_leave() abort
+  echomsg ''
+  verbose filter! /<.*@.*>$/ messages
+endfunction
+
+augroup primula
+  autocmd VimLeave * call s:vim_leave()
+augroup END
+
+execute 'profile start' $PROFILE
+execute 'profile! file' join([expand('<sfile>:p:h'), '*'], has('win32') ? '\' : '/')

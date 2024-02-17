@@ -1,0 +1,46 @@
+SCRIPT  tests/vimfiles/dict.vim
+Sourced 1 time
+Total time:   0.001095
+ Self time:   0.000162
+
+count  total (s)   self (s)
+    1              0.000026 let s:dict = {}
+                            
+    1              0.000018 function! s:dict.today() abort dict
+                              echo strftime('%Y-%m-%d')
+                            endfunction
+                            
+    1              0.000002 function! s:dict.main() abort dict
+                              echo 'Hello, world!'
+                            endfunction
+                            
+    1   0.000973   0.000040 call s:dict.main()
+
+FUNCTION  1()
+    Defined: tests/vimfiles/dict.vim:3
+Called 0 times
+Total time:   0.000000
+ Self time:   0.000000
+
+count  total (s)   self (s)
+                              echo strftime('%Y-%m-%d')
+
+FUNCTION  2()
+    Defined: tests/vimfiles/dict.vim:7
+Called 1 time
+Total time:   0.000933
+ Self time:   0.000933
+
+count  total (s)   self (s)
+    1              0.000931   echo 'Hello, world!'
+
+FUNCTIONS SORTED ON TOTAL TIME
+count  total (s)   self (s)  function
+    1   0.000933             2()
+                             1()
+
+FUNCTIONS SORTED ON SELF TIME
+count  total (s)   self (s)  function
+    1              0.000933  2()
+                             1()
+

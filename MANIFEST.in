@@ -1,0 +1,4 @@
+include LICENSE.txt
+include README.rst
+include pyproject.toml
+recursive-include tests *.py vimrc *.vim *.txt

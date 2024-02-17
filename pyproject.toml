@@ -1,0 +1,65 @@
+[build-system]
+requires = [
+    "setuptools >= 61.0",
+    "scmver[toml] >= 1.7",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "primula"
+description = "A code coverage tool for Vim script"
+readme = "README.rst"
+authors = [
+    {name = "Akinori Hattori", email = "hattya@gmail.com"},
+]
+license = {text = "ALv2"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+]
+requires-python = ">= 3.8"
+dynamic = [
+    "version",
+]
+
+[project.urls]
+Homepage = "https://github.com/hattya/primula"
+
+[tool.setuptools]
+include-package-data = false
+packages = [
+    "primula",
+]
+
+[tool.setuptools.package-data]
+primula = [
+    "py.typed",
+]
+
+[tool.scmver]
+spec = "micro"
+write-to = "primula/__version__.py"
+fallback = {attr = "primula:__version__"}
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "except ImportError:",
+]
+
+[tool.mypy]
+implicit_reexport = true
+strict = true
