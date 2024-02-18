@@ -1,30 +1,30 @@
 SCRIPT  tests/vimfiles/autoload.vim
 Sourced 1 time
-Total time:   0.002082
- Self time:   0.002082
+Total time:   0.002463
+ Self time:   0.002463
 
 count  total (s)   self (s)
-    1              0.002024 call autoload#main()
+    1              0.002400 call autoload#main()
 
 SCRIPT  tests/vimfiles/autoload/autoload.vim
 Sourced 1 time
-Total time:   0.000128
- Self time:   0.000128
+Total time:   0.000119
+ Self time:   0.000119
 
 count  total (s)   self (s)
-    1              0.000021 let s:save_cpo = &cpo
-    1              0.000012 set cpo&vim
+    1              0.000017 let s:save_cpo = &cpo
+    1              0.000010 set cpo&vim
                             
-    1              0.000012 function! autoload#today() abort
+    1              0.000011 function! autoload#today() abort
                               echo strftime('%Y-%m-%d')
                             endfunction
                             
-    1              0.000006 function! autoload#main() abort
+    1              0.000002 function! autoload#main() abort
                               echo 'Hello, world!'
                             endfunction
                             
     1              0.000016 let &cpo = s:save_cpo
-    1              0.000015 unlet s:save_cpo
+    1              0.000014 unlet s:save_cpo
 
 FUNCTION  autoload#today()
     Defined: tests/vimfiles/autoload/autoload.vim:4
@@ -38,19 +38,19 @@ count  total (s)   self (s)
 FUNCTION  autoload#main()
     Defined: tests/vimfiles/autoload/autoload.vim:8
 Called 1 time
-Total time:   0.000610
- Self time:   0.000610
+Total time:   0.000974
+ Self time:   0.000974
 
 count  total (s)   self (s)
-    1              0.000609   echo 'Hello, world!'
+    1              0.000973   echo 'Hello, world!'
 
 FUNCTIONS SORTED ON TOTAL TIME
 count  total (s)   self (s)  function
-    1   0.000610             autoload#main()
+    1   0.000974             autoload#main()
                              autoload#today()
 
 FUNCTIONS SORTED ON SELF TIME
 count  total (s)   self (s)  function
-    1              0.000610  autoload#main()
+    1              0.000974  autoload#main()
                              autoload#today()
 

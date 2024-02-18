@@ -20,6 +20,7 @@ class CoreTestCase(unittest.TestCase):
 
     maxDiff = None
     tags = [
+        'v9.0.1411',
         'v9.0.0000',
     ]
 

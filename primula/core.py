@@ -28,6 +28,7 @@ _TOTAL_TIME = 'Total time: '
 _SELF_TIME = ' Self time: '
 
 _TOTALS = 'count  total (s)   self (s)'
+_TOTALS_NS = 'count     total (s)      self (s)'
 _SORT_LIST = 'FUNCTIONS SORTED ON '
 
 
@@ -73,7 +74,7 @@ class Profile:
                 total_time = float(l.split(':')[1])
             elif l.startswith(_SELF_TIME):
                 self_time = float(l.split(':')[1])
-            elif l == _TOTALS:
+            elif l in (_TOTALS, _TOTALS_NS):
                 col = len(l)
                 break
             elif l:
@@ -97,7 +98,7 @@ class Profile:
                 self_time = float(l.split(':')[1])
             elif l.startswith(_DEFINED):
                 defined = l[len(_DEFINED):].rsplit(':', 1)
-            elif l == _TOTALS:
+            elif l in (_TOTALS, _TOTALS_NS):
                 col = len(l)
                 break
             elif l:

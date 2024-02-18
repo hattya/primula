@@ -47,6 +47,10 @@ def profile(ctx: click.Context, verbose: bool) -> None:
                 os.environ['PROFILE'] = str(profile)
                 subprocess.run((vim, '--clean', '-Nensu', vimfiles / 'vimrc',  '-S', path, '-c', 'q'), check=True)
                 rel_script(profile)
+
+            for path in profiles.iterdir():
+                if path.name.endswith('.v9.0.0000.txt'):
+                    prof_ns(path)
         except subprocess.CalledProcessError as e:
             ctx.exit(e.returncode)
 
@@ -103,6 +107,30 @@ def rel_script(path: Path) -> None:
             data.append(l)
     with path.open('w', encoding='utf-8', newline='') as fp:
         fp.writelines(data)
+
+
+def prof_ns(path: Path) -> None:
+    data = []
+    with path.open(encoding='utf-8') as fp:
+        totals = False
+        for l in fp:
+            if totals:
+                if l.rstrip(os.linesep):
+                    l = f'{l[:16]}{"000" if l[9] == "." else "   "} {l[17:27]}{"000" if l[20] == "." else "   "} {l[28:]}'
+                else:
+                    totals = False
+            elif l.startswith(('Total ', ' Self ')):
+                l = f'{l.rstrip(os.linesep)}000\n'
+            elif l.startswith('count '):
+                l = 'count     total (s)      self (s)\n'
+                totals = True
+            data.append(l)
+    with replace_name(path, tag='v9.0.1411').open('w', encoding='utf-8', newline='') as fp:
+        fp.writelines(data)
+
+
+def replace_name(path: Path, tag: str) -> Path:
+    return path.with_name(f'{path.stem[:path.stem.rindex(".v")]}.{tag}{path.suffix}')
 
 
 if __name__ == '__main__':

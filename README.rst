@@ -24,6 +24,7 @@ Requirements
 ------------
 
 - Python 3.8+
+- Vim 8.1.2055+
 
 
 License
