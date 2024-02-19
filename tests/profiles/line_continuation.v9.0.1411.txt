@@ -1,0 +1,39 @@
+SCRIPT  tests/vimfiles/line_continuation.vim
+Sourced 1 time
+Total time:   0.001076000
+ Self time:   0.000170000
+
+count     total (s)      self (s)
+    1                 0.000025000 function! Echo() abort
+                                    echo 0
+                                    \ 1
+                                    echo 2
+                                    \  3
+                                    \ 4
+                                  endfunction
+                                  
+    1   0.000933000   0.000027000 call Echo()
+    1                 0.000010000 echo 5
+                                  \ 6
+    1                 0.000026000 echo 7
+                                  \  8
+                                  \ 9
+
+FUNCTION  Echo()
+    Defined: tests/vimfiles/line_continuation.vim:1
+Called 1 time
+Total time:   0.000906000
+ Self time:   0.000906000
+
+count     total (s)      self (s)
+    1                 0.000647000   echo 0 1
+    1                 0.000257000   echo 2  3 4
+
+FUNCTIONS SORTED ON TOTAL TIME
+count     total (s)      self (s)
+    1   0.000906000                Echo()
+
+FUNCTIONS SORTED ON SELF TIME
+count     total (s)      self (s)
+    1                 0.000906000  Echo()
+

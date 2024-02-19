@@ -243,6 +243,48 @@ class CoreTestCase(unittest.TestCase):
                 ])
                 self.assertTrue(f.mapped)
 
+    def test_line_continuation(self):
+        for tag in self.tags:
+            with self.subTest(tag=tag):
+                p = core.Profile(self.profile(f'line_continuation.{tag}.txt'))
+                self.assertEqual(len(p.scripts), 1)
+                self.assertEqual(len(p.functions), 1)
+
+                path = 'tests/vimfiles/line_continuation.vim'
+                s = p.scripts[path]
+                self.assertEqual(s.path, path)
+                self.assertEqual(s.sourced, 1)
+                self.assertGreater(s.total_time, 0.0)
+                self.assertGreater(s.self_time, 0.0)
+                self.assertEqual(self.lines(s), [
+                    (1, 'function! Echo() abort'),
+                    (1, '  echo 0'),
+                    (1, '  \\ 1'),
+                    (1, '  echo 2'),
+                    (1, '  \\  3'),
+                    (1, '  \\ 4'),
+                    (0, 'endfunction'),
+                    (0, ''),
+                    (1, 'call Echo()'),
+                    (1, 'echo 5'),
+                    (1, '\\ 6'),
+                    (1, 'echo 7'),
+                    (1, '\\  8'),
+                    (1, '\\ 9'),
+                ])
+
+                f = p.functions[0]
+                self.assertEqual(f.name, 'Echo()')
+                self.assertEqual(f.defined, (path, 1))
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, "  echo 0 1"),
+                    (1, "  echo 2  3 4"),
+                ])
+                self.assertTrue(f.mapped)
+
     def test_function_line_mismatch(self):
         with self.tempfile() as path:
             script = 'tests/vimfiles/line_mismatch.vim'

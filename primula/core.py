@@ -115,17 +115,18 @@ class Profile:
             l = self._readline()
             if not l:
                 break
-            # count
-            i = len('count')
-            s = l[:i].lstrip()
-            count = int(s) if s else None
-            # total time
-            j = i + (col - i) // 2
-            s = l[i+1:j].lstrip()
-            total_time = float(s) if s else None
-            # self time
-            s = l[j+1:col].lstrip()
-            self_time = float(s) if s else None
+            elif not l[col+1:].lstrip().startswith('\\'):
+                # count
+                i = len('count')
+                s = l[:i].lstrip()
+                count = int(s) if s else None
+                # total time
+                j = i + (col - i) // 2
+                s = l[i+1:j].lstrip()
+                total_time = float(s) if s else None
+                # self time
+                s = l[j+1:col].lstrip()
+                self_time = float(s) if s else None
             yield Line(count, total_time, self_time, l[col+1:])
 
     def _readline(self) -> str:
@@ -145,13 +146,24 @@ class Profile:
         i = defined
         for fl in function.lines:
             sl = script.lines[i]
+            j = i + 1
             if sl.line != fl.line:
-                # revert
-                for sl in script.lines[defined:i]:
-                    sl.count = sl.total_time = sl.self_time = None
-                return -1
-            sl.count, sl.total_time, sl.self_time = fl.count, fl.total_time, fl.self_time
-            i += 1
+                # check for line continuation
+                line = sl.line
+                for sl in script.lines[j:]:
+                    next_line = sl.line.lstrip()
+                    if not next_line.startswith('\\'):
+                        break
+                    line += next_line[1:]
+                    j += 1
+                if line != fl.line:
+                    # revert
+                    for sl in script.lines[defined:i]:
+                        sl.count = sl.total_time = sl.self_time = None
+                    return -1
+            for sl in script.lines[i:j]:
+                sl.count, sl.total_time, sl.self_time = fl.count, fl.total_time, fl.self_time
+            i = j
         else:
             function.mapped = True
         return i
