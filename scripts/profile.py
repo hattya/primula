@@ -35,6 +35,7 @@ def profile(ctx: click.Context, verbose: bool) -> None:
 
     for tag, version in (
         ('v9.0.0000', '9.0.0000'),
+        ('v8.1.0365', '8.1.0366'),
     ):
         try:
             vim = setup_vim(version, verbose=verbose)

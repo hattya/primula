@@ -22,6 +22,7 @@ class CoreTestCase(unittest.TestCase):
     tags = [
         'v9.0.1411',
         'v9.0.0000',
+        'v8.1.0365',
     ]
 
     def profile(self, name):

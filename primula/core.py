@@ -97,7 +97,16 @@ class Profile:
             elif l.startswith(_SELF_TIME):
                 self_time = float(l.split(':')[1])
             elif l.startswith(_DEFINED):
-                defined = l[len(_DEFINED):].rsplit(':', 1)
+                i = l.rfind(':')
+                if (i > 0
+                    and l[i+1:].isdigit()):
+                    # Vim 8.1.2055+
+                    off = 1
+                else:
+                    # Vim 8.1.2054-
+                    i = l.rindex(' line ')
+                    off = 6
+                defined = (l[len(_DEFINED):i], l[i+off:])
             elif l in (_TOTALS, _TOTALS_NS):
                 col = len(l)
                 break

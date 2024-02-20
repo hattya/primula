@@ -1,0 +1,56 @@
+SCRIPT  tests/vimfiles/autoload.vim
+Sourced 1 time
+Total time:   0.002702
+ Self time:   0.001500
+
+count  total (s)   self (s)
+    1   0.002634   0.001432 call autoload#main()
+
+SCRIPT  tests/vimfiles/autoload/autoload.vim
+Sourced 1 time
+Total time:   0.000124
+ Self time:   0.000124
+
+count  total (s)   self (s)
+    1              0.000027 let s:save_cpo = &cpo
+    1              0.000012 set cpo&vim
+                            
+    1              0.000007 function! autoload#today() abort
+                              echo strftime('%Y-%m-%d')
+                            endfunction
+                            
+    1              0.000002 function! autoload#main() abort
+                              echo 'Hello, world!'
+                            endfunction
+                            
+    1              0.000006 let &cpo = s:save_cpo
+    1              0.000018 unlet s:save_cpo
+
+FUNCTION  autoload#today()
+    Defined: tests/vimfiles/autoload/autoload.vim line 4
+Called 0 times
+Total time:   0.000000
+ Self time:   0.000000
+
+count  total (s)   self (s)
+                              echo strftime('%Y-%m-%d')
+
+FUNCTION  autoload#main()
+    Defined: tests/vimfiles/autoload/autoload.vim line 8
+Called 1 time
+Total time:   0.001030
+ Self time:   0.001030
+
+count  total (s)   self (s)
+    1              0.001029   echo 'Hello, world!'
+
+FUNCTIONS SORTED ON TOTAL TIME
+count  total (s)   self (s)  function
+    1   0.001030             autoload#main()
+                             autoload#today()
+
+FUNCTIONS SORTED ON SELF TIME
+count  total (s)   self (s)  function
+    1              0.001030  autoload#main()
+                             autoload#today()
+

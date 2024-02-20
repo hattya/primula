@@ -1,0 +1,44 @@
+SCRIPT  tests/vimfiles/global.vim
+Sourced 1 time
+Total time:   0.000913
+ Self time:   0.000090
+
+count  total (s)   self (s)
+    1              0.000012 function! Today() abort
+                              echo strftime('%Y-%m-%d')
+                            endfunction
+                            
+    1              0.000002 function! Main() abort
+                              echo 'Hello, world!'
+                            endfunction
+                            
+    1   0.000853   0.000031 call Main()
+
+FUNCTION  Today()
+    Defined: tests/vimfiles/global.vim line 1
+Called 0 times
+Total time:   0.000000
+ Self time:   0.000000
+
+count  total (s)   self (s)
+                              echo strftime('%Y-%m-%d')
+
+FUNCTION  Main()
+    Defined: tests/vimfiles/global.vim line 5
+Called 1 time
+Total time:   0.000823
+ Self time:   0.000823
+
+count  total (s)   self (s)
+    1              0.000822   echo 'Hello, world!'
+
+FUNCTIONS SORTED ON TOTAL TIME
+count  total (s)   self (s)  function
+    1   0.000823             Main()
+                             Today()
+
+FUNCTIONS SORTED ON SELF TIME
+count  total (s)   self (s)  function
+    1              0.000823  Main()
+                             Today()
+
