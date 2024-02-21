@@ -1,0 +1,104 @@
+SCRIPT  tests/vimfiles/execute.vim
+Sourced 1 time
+Total time:   0.000222
+ Self time:   0.000165
+
+count  total (s)   self (s)
+    1              0.000023 execute "function! Spam() abort\n  echo 1\nendfunction"
+    1              0.000014 execute join([
+                            \         'function! Eggs() abort',
+                            \         '  echo 2',
+                            \         'endfunction',
+                            \       ], "\n")
+                            
+    1   0.000040   0.000020 call Spam()
+    1   0.000009   0.000005 call Eggs()
+                            
+    1              0.000003 function! Define(name, v) abort
+                              execute "function! " . a:name . "() abort\n  echo " . a:v . "\nendfunction"
+                            endfunction
+                            
+    1   0.000023   0.000005 call Define('Ham', 3)
+    1   0.000015   0.000005 call Define('Toast', 4)
+                            
+    1   0.000006   0.000003 call Ham()
+    1   0.000005   0.000003 call Toast()
+                            
+    1              0.000025 execute join([
+                            \         'function! Beans() abort',
+                            \         '  echo 5',
+                            \         'endfunction',
+                            \       ], "\n")
+
+FUNCTION  Toast()
+    Defined: tests/vimfiles/execute.vim:12
+Called 1 time
+Total time:   0.000002
+ Self time:   0.000002
+
+count  total (s)   self (s)
+    1              0.000002   echo 4
+
+FUNCTION  Define()
+    Defined: tests/vimfiles/execute.vim:11
+Called 2 times
+Total time:   0.000028
+ Self time:   0.000028
+
+count  total (s)   self (s)
+    2              0.000027   execute "function! " . a:name . "() abort\n  echo " . a:v . "\nendfunction"
+
+FUNCTION  Beans()
+    Defined: tests/vimfiles/execute.vim:21
+Called 0 times
+Total time:   0.000000
+ Self time:   0.000000
+
+count  total (s)   self (s)
+                              echo 5
+
+FUNCTION  Eggs()
+    Defined: tests/vimfiles/execute.vim:2
+Called 1 time
+Total time:   0.000004
+ Self time:   0.000004
+
+count  total (s)   self (s)
+    1              0.000003   echo 2
+
+FUNCTION  Spam()
+    Defined: tests/vimfiles/execute.vim:1
+Called 1 time
+Total time:   0.000020
+ Self time:   0.000020
+
+count  total (s)   self (s)
+    1              0.000019   echo 1
+
+FUNCTION  Ham()
+    Defined: tests/vimfiles/execute.vim:12
+Called 1 time
+Total time:   0.000003
+ Self time:   0.000003
+
+count  total (s)   self (s)
+    1              0.000003   echo 3
+
+FUNCTIONS SORTED ON TOTAL TIME
+count  total (s)   self (s)  function
+    2   0.000028             Define()
+    1   0.000020             Spam()
+    1   0.000004             Eggs()
+    1   0.000003             Ham()
+    1   0.000002             Toast()
+                             Beans()
+
+FUNCTIONS SORTED ON SELF TIME
+count  total (s)   self (s)  function
+    2              0.000028  Define()
+    1              0.000020  Spam()
+    1              0.000004  Eggs()
+    1              0.000003  Ham()
+    1              0.000002  Toast()
+                             Beans()
+

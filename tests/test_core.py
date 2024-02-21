@@ -40,6 +40,9 @@ class CoreTestCase(unittest.TestCase):
     def lines(self, o):
         return [(l.count or 0, l.line) for l in o.lines]
 
+    def version_info(self, tag):
+        return tuple(map(int, tag.lstrip('v').split('.')))
+
     def test_global(self):
         for tag in self.tags:
             with self.subTest(tag=tag):
@@ -285,6 +288,127 @@ class CoreTestCase(unittest.TestCase):
                     (1, "  echo 2  3 4"),
                 ])
                 self.assertTrue(f.mapped)
+
+    def test_execute(self):
+        for tag in self.tags:
+            with self.subTest(tag=tag):
+                version_info = self.version_info(tag)
+
+                p = core.Profile(self.profile(f'execute.{tag}.txt'))
+                self.assertEqual(len(p.scripts), 1)
+                self.assertEqual(len(p.functions), 6)
+
+                path = 'tests/vimfiles/execute.vim'
+                s = p.scripts[path]
+                self.assertEqual(s.path, path)
+                self.assertEqual(s.sourced, 1)
+                self.assertGreater(s.total_time, 0.0)
+                self.assertGreater(s.self_time, 0.0)
+                self.assertEqual(self.lines(s), [
+                    (1, r'execute "function! Spam() abort\n  echo 1\nendfunction"'),
+                    (1, r'execute join(['),
+                    (1, r"\         'function! Eggs() abort',"),
+                    (1, r"\         '  echo 2',"),
+                    (1, r"\         'endfunction',"),
+                    (1, r'\       ], "\n")'),
+                    (0, r''),
+                    (1, r'call Spam()'),
+                    (1, r'call Eggs()'),
+                    (0, r''),
+                    (1, r'function! Define(name, v) abort'),
+                    (2, r'  execute "function! " . a:name . "() abort\n  echo " . a:v . "\nendfunction"'),
+                    (0, r'endfunction'),
+                    (0, r''),
+                    (1, r"call Define('Ham', 3)"),
+                    (1, r"call Define('Toast', 4)"),
+                    (0, r''),
+                    (1, r'call Ham()'),
+                    (1, r'call Toast()'),
+                    (0, r''),
+                    (1, r'execute join(['),
+                    (1, r"\         'function! Beans() abort',"),
+                    (1, r"\         '  echo 5',"),
+                    (1, r"\         'endfunction',"),
+                    (1, r'\       ], "\n")'),
+                ])
+
+                f = p.functions[4]
+                self.assertEqual(f.name, 'Spam()')
+                self.assertEqual(f.defined, (path, 1))
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, '  echo 1'),
+                ])
+                self.assertFalse(f.mapped)
+
+                f = p.functions[3]
+                self.assertEqual(f.name, 'Eggs()')
+                if version_info >= (8, 1, 1625):
+                    self.assertEqual(f.defined, (path, 2))
+                else:
+                    self.assertEqual(f.defined, (path, 4))
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, '  echo 2'),
+                ])
+                self.assertFalse(f.mapped)
+
+                f = p.functions[1]
+                self.assertEqual(f.name, 'Define()')
+                self.assertEqual(f.defined, (path, 11))
+                self.assertEqual(f.called, 2)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (2, r'  execute "function! " . a:name . "() abort\n  echo " . a:v . "\nendfunction"'),
+                ])
+                self.assertTrue(f.mapped)
+
+                f = p.functions[5]
+                self.assertEqual(f.name, 'Ham()')
+                if version_info >= (8, 1, 1625):
+                    self.assertEqual(f.defined, (path, 12))
+                else:
+                    self.assertEqual(f.defined, (path, 10))
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, '  echo 3'),
+                ])
+                self.assertFalse(f.mapped)
+
+                f = p.functions[0]
+                self.assertEqual(f.name, 'Toast()')
+                if version_info >= (8, 1, 1625):
+                    self.assertEqual(f.defined, (path, 12))
+                else:
+                    self.assertEqual(f.defined, (path, 10))
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, '  echo 4'),
+                ])
+                self.assertFalse(f.mapped)
+
+                f = p.functions[2]
+                self.assertEqual(f.name, 'Beans()')
+                if version_info >= (8, 1, 1625):
+                    self.assertEqual(f.defined, (path, 21))
+                else:
+                    self.assertEqual(f.defined, (path, 23))
+                self.assertEqual(f.called, 0)
+                self.assertEqual(f.total_time, 0.0)
+                self.assertEqual(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (0, '  echo 5'),
+                ])
+                self.assertFalse(f.mapped)
 
     def test_function_line_mismatch(self):
         with self.tempfile() as path:

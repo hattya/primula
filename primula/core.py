@@ -115,7 +115,7 @@ class Profile:
 
         f = Function(name, called, total_time, self_time)
         if defined:
-            f.defined = (os.path.expanduser(defined[0].lstrip()), int(defined[1]))
+            f.defined = (os.path.expanduser(defined[0].lstrip()), max(int(defined[1]), 1))
         f.lines.extend(self._parse_lines(col))
         self.functions.append(f)
 
