@@ -1,0 +1,44 @@
+SCRIPT  tests/vimfiles/duplicate.vim
+Sourced 1 time
+Total time:   0.000124
+ Self time:   0.000111
+
+count  total (s)   self (s)
+    1              0.000010 function! Spam(...) abort
+                              return a:000
+                            endfunction
+                            
+    1              0.000002 function! Eggs(...) abort
+                              return a:000
+                            endfunction
+                            
+    1   0.000051   0.000038 call Spam()
+
+FUNCTION  Eggs()
+    Defined: tests/vimfiles/duplicate.vim:5
+Called 0 times
+Total time:   0.000000
+ Self time:   0.000000
+
+count  total (s)   self (s)
+                              return a:000
+
+FUNCTION  Spam()
+    Defined: tests/vimfiles/duplicate.vim:1
+Called 1 time
+Total time:   0.000013
+ Self time:   0.000013
+
+count  total (s)   self (s)
+    1              0.000011   return a:000
+
+FUNCTIONS SORTED ON TOTAL TIME
+count  total (s)   self (s)  function
+    1   0.000013             Spam()
+                             Eggs()
+
+FUNCTIONS SORTED ON SELF TIME
+count  total (s)   self (s)  function
+    1              0.000013  Spam()
+                             Eggs()
+

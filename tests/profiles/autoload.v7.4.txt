@@ -27,7 +27,6 @@ count  total (s)   self (s)
     1              0.000014 unlet s:save_cpo
 
 FUNCTION  autoload#today()
-    Defined: tests/vimfiles/autoload/autoload.vim line 4
 Called 0 times
 Total time:   0.000000
  Self time:   0.000000
@@ -36,7 +35,6 @@ count  total (s)   self (s)
                               echo strftime('%Y-%m-%d')
 
 FUNCTION  autoload#main()
-    Defined: tests/vimfiles/autoload/autoload.vim line 8
 Called 1 time
 Total time:   0.000595
  Self time:   0.000595

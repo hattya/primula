@@ -23,6 +23,7 @@ class CoreTestCase(unittest.TestCase):
         'v9.0.1411',
         'v9.0.0000',
         'v8.1.0365',
+        'v7.4',
     ]
 
     def profile(self, name):
@@ -46,6 +47,8 @@ class CoreTestCase(unittest.TestCase):
     def test_global(self):
         for tag in self.tags:
             with self.subTest(tag=tag):
+                version_info = self.version_info(tag)
+
                 p = core.Profile(self.profile(f'global.{tag}.txt'))
                 self.assertEqual(len(p.scripts), 1)
                 self.assertEqual(len(p.functions), 2)
@@ -70,7 +73,10 @@ class CoreTestCase(unittest.TestCase):
 
                 f = p.functions[0]
                 self.assertEqual(f.name, 'Today()')
-                self.assertEqual(f.defined, (path, 1))
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 1))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 0)
                 self.assertEqual(f.total_time, 0.0)
                 self.assertEqual(f.self_time, 0.0)
@@ -81,7 +87,10 @@ class CoreTestCase(unittest.TestCase):
 
                 f = p.functions[1]
                 self.assertEqual(f.name, 'Main()')
-                self.assertEqual(f.defined, (path, 5))
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 5))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 1)
                 self.assertGreater(f.total_time, 0.0)
                 self.assertGreater(f.self_time, 0.0)
@@ -93,6 +102,8 @@ class CoreTestCase(unittest.TestCase):
     def test_script_local(self):
         for tag in self.tags:
             with self.subTest(tag=tag):
+                version_info = self.version_info(tag)
+
                 p = core.Profile(self.profile(f'script_local.{tag}.txt'))
                 self.assertEqual(len(p.scripts), 1)
                 self.assertEqual(len(p.functions), 2)
@@ -117,7 +128,10 @@ class CoreTestCase(unittest.TestCase):
 
                 f = p.functions[1]
                 self.assertEqual(f.name, '<SNR>2_today()')
-                self.assertEqual(f.defined, (path, 1))
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 1))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 0)
                 self.assertEqual(f.total_time, 0.0)
                 self.assertEqual(f.self_time, 0.0)
@@ -128,7 +142,10 @@ class CoreTestCase(unittest.TestCase):
 
                 f = p.functions[0]
                 self.assertEqual(f.name, '<SNR>2_main()')
-                self.assertEqual(f.defined, (path, 5))
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 5))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 1)
                 self.assertGreater(f.total_time, 0.0)
                 self.assertGreater(f.self_time, 0.0)
@@ -140,6 +157,8 @@ class CoreTestCase(unittest.TestCase):
     def test_dict(self):
         for tag in self.tags:
             with self.subTest(tag=tag):
+                version_info = self.version_info(tag)
+
                 p = core.Profile(self.profile(f'dict.{tag}.txt'))
                 self.assertEqual(len(p.scripts), 1)
                 self.assertEqual(len(p.functions), 2)
@@ -166,7 +185,10 @@ class CoreTestCase(unittest.TestCase):
 
                 f = p.functions[0]
                 self.assertEqual(f.name, '1()')
-                self.assertEqual(f.defined, (path, 3))
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 3))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 0)
                 self.assertEqual(f.total_time, 0.0)
                 self.assertEqual(f.self_time, 0.0)
@@ -177,7 +199,10 @@ class CoreTestCase(unittest.TestCase):
 
                 f = p.functions[1]
                 self.assertEqual(f.name, '2()')
-                self.assertEqual(f.defined, (path, 7))
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 7))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 1)
                 self.assertGreater(f.total_time, 0.0)
                 self.assertGreater(f.self_time, 0.0)
@@ -189,6 +214,8 @@ class CoreTestCase(unittest.TestCase):
     def test_autoload(self):
         for tag in self.tags:
             with self.subTest(tag=tag):
+                version_info = self.version_info(tag)
+
                 p = core.Profile(self.profile(f'autoload.{tag}.txt'))
                 self.assertEqual(len(p.scripts), 2)
                 self.assertEqual(len(p.functions), 2)
@@ -227,7 +254,10 @@ class CoreTestCase(unittest.TestCase):
 
                 f = p.functions[0]
                 self.assertEqual(f.name, 'autoload#today()')
-                self.assertEqual(f.defined, (path, 4))
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 4))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 0)
                 self.assertEqual(f.total_time, 0.0)
                 self.assertEqual(f.self_time, 0.0)
@@ -238,7 +268,10 @@ class CoreTestCase(unittest.TestCase):
 
                 f = p.functions[1]
                 self.assertEqual(f.name, 'autoload#main()')
-                self.assertEqual(f.defined, (path, 8))
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 8))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 1)
                 self.assertGreater(f.total_time, 0.0)
                 self.assertGreater(f.self_time, 0.0)
@@ -250,6 +283,8 @@ class CoreTestCase(unittest.TestCase):
     def test_line_continuation(self):
         for tag in self.tags:
             with self.subTest(tag=tag):
+                version_info = self.version_info(tag)
+
                 p = core.Profile(self.profile(f'line_continuation.{tag}.txt'))
                 self.assertEqual(len(p.scripts), 1)
                 self.assertEqual(len(p.functions), 1)
@@ -279,7 +314,10 @@ class CoreTestCase(unittest.TestCase):
 
                 f = p.functions[0]
                 self.assertEqual(f.name, 'Echo()')
-                self.assertEqual(f.defined, (path, 1))
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 1))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 1)
                 self.assertGreater(f.total_time, 0.0)
                 self.assertGreater(f.self_time, 0.0)
@@ -334,7 +372,10 @@ class CoreTestCase(unittest.TestCase):
 
                 f = p.functions[4]
                 self.assertEqual(f.name, 'Spam()')
-                self.assertEqual(f.defined, (path, 1))
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 1))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 1)
                 self.assertGreater(f.total_time, 0.0)
                 self.assertGreater(f.self_time, 0.0)
@@ -347,8 +388,10 @@ class CoreTestCase(unittest.TestCase):
                 self.assertEqual(f.name, 'Eggs()')
                 if version_info >= (8, 1, 1625):
                     self.assertEqual(f.defined, (path, 2))
-                else:
+                elif version_info >= (8, 1, 365):
                     self.assertEqual(f.defined, (path, 4))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 1)
                 self.assertGreater(f.total_time, 0.0)
                 self.assertGreater(f.self_time, 0.0)
@@ -359,7 +402,10 @@ class CoreTestCase(unittest.TestCase):
 
                 f = p.functions[1]
                 self.assertEqual(f.name, 'Define()')
-                self.assertEqual(f.defined, (path, 11))
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 11))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 2)
                 self.assertGreater(f.total_time, 0.0)
                 self.assertGreater(f.self_time, 0.0)
@@ -372,8 +418,10 @@ class CoreTestCase(unittest.TestCase):
                 self.assertEqual(f.name, 'Ham()')
                 if version_info >= (8, 1, 1625):
                     self.assertEqual(f.defined, (path, 12))
-                else:
+                elif version_info >= (8, 1, 365):
                     self.assertEqual(f.defined, (path, 10))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 1)
                 self.assertGreater(f.total_time, 0.0)
                 self.assertGreater(f.self_time, 0.0)
@@ -386,8 +434,10 @@ class CoreTestCase(unittest.TestCase):
                 self.assertEqual(f.name, 'Toast()')
                 if version_info >= (8, 1, 1625):
                     self.assertEqual(f.defined, (path, 12))
-                else:
+                elif version_info >= (8, 1, 365):
                     self.assertEqual(f.defined, (path, 10))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 1)
                 self.assertGreater(f.total_time, 0.0)
                 self.assertGreater(f.self_time, 0.0)
@@ -400,8 +450,10 @@ class CoreTestCase(unittest.TestCase):
                 self.assertEqual(f.name, 'Beans()')
                 if version_info >= (8, 1, 1625):
                     self.assertEqual(f.defined, (path, 21))
-                else:
+                elif version_info >= (8, 1, 365):
                     self.assertEqual(f.defined, (path, 23))
+                else:
+                    self.assertIsNone(f.defined)
                 self.assertEqual(f.called, 0)
                 self.assertEqual(f.total_time, 0.0)
                 self.assertEqual(f.self_time, 0.0)
@@ -409,6 +461,68 @@ class CoreTestCase(unittest.TestCase):
                     (0, '  echo 5'),
                 ])
                 self.assertFalse(f.mapped)
+
+    def test_duplicate(self):
+        for tag in self.tags:
+            with self.subTest(tag=tag):
+                version_info = self.version_info(tag)
+                c = 1 if version_info >= (8, 1, 365) else 0
+
+                p = core.Profile(self.profile(f'duplicate.{tag}.txt'))
+                self.assertEqual(len(p.scripts), 1)
+                self.assertEqual(len(p.functions), 2)
+
+                path = 'tests/vimfiles/duplicate.vim'
+                s = p.scripts[path]
+                self.assertEqual(s.path, path)
+                self.assertEqual(s.sourced, 1)
+                self.assertGreater(s.total_time, 0.0)
+                self.assertGreater(s.self_time, 0.0)
+                self.assertEqual(self.lines(s), [
+                    (1, 'function! Spam(...) abort'),
+                    (c, '  return a:000'),
+                    (0, 'endfunction'),
+                    (0, ''),
+                    (1, 'function! Eggs(...) abort'),
+                    (0, '  return a:000'),
+                    (0, 'endfunction'),
+                    (0, ''),
+                    (1, 'call Spam()'),
+                ])
+
+                f = p.functions[1]
+                self.assertEqual(f.name, 'Spam()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 1))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, '  return a:000'),
+                ])
+                if version_info >= (8, 1, 365):
+                    self.assertTrue(f.mapped)
+                else:
+                    self.assertFalse(f.mapped)
+
+                f = p.functions[0]
+                self.assertEqual(f.name, 'Eggs()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 5))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 0)
+                self.assertEqual(f.total_time, 0.0)
+                self.assertEqual(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (0, '  return a:000'),
+                ])
+                if version_info >= (8, 1, 365):
+                    self.assertTrue(f.mapped)
+                else:
+                    self.assertFalse(f.mapped)
 
     def test_function_line_mismatch(self):
         with self.tempfile() as path:

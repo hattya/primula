@@ -52,6 +52,8 @@ def profile(ctx: click.Context, verbose: bool) -> None:
             for path in profiles.iterdir():
                 if path.name.endswith('.v9.0.0000.txt'):
                     prof_ns(path)
+                elif path.name.endswith('.v8.1.0365.txt'):
+                    drop_defined(path)
         except subprocess.CalledProcessError as e:
             ctx.exit(e.returncode)
 
@@ -127,6 +129,17 @@ def prof_ns(path: Path) -> None:
                 totals = True
             data.append(l)
     with replace_name(path, tag='v9.0.1411').open('w', encoding='utf-8', newline='') as fp:
+        fp.writelines(data)
+
+
+def drop_defined(path: Path) -> None:
+    data = []
+    with path.open(encoding='utf-8') as fp:
+        for l in fp:
+            if l.startswith('    Defined:'):
+                continue
+            data.append(l)
+    with replace_name(path, tag='v7.4').open('w', encoding='utf-8', newline='') as fp:
         fp.writelines(data)
 
 

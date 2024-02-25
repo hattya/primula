@@ -15,7 +15,6 @@ count  total (s)   self (s)
     1   0.000708   0.000031 call s:main()
 
 FUNCTION  <SNR>2_main()
-    Defined: tests/vimfiles/script_local.vim line 5
 Called 1 time
 Total time:   0.000676
  Self time:   0.000676
@@ -24,7 +23,6 @@ count  total (s)   self (s)
     1              0.000675   echo 'Hello, world!'
 
 FUNCTION  <SNR>2_today()
-    Defined: tests/vimfiles/script_local.vim line 1
 Called 0 times
 Total time:   0.000000
  Self time:   0.000000

@@ -20,7 +20,6 @@ count  total (s)   self (s)
                             \ 9
 
 FUNCTION  Echo()
-    Defined: tests/vimfiles/line_continuation.vim line 1
 Called 1 time
 Total time:   0.000393
  Self time:   0.000393

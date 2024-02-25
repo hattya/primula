@@ -8,7 +8,9 @@
 
 from __future__ import annotations
 import dataclasses
+import hashlib
 import os
+import re
 from typing import Dict, Iterator, List, Optional, Tuple
 
 from ._typing import Path
@@ -30,6 +32,8 @@ _SELF_TIME = ' Self time: '
 _TOTALS = 'count  total (s)   self (s)'
 _TOTALS_NS = 'count     total (s)      self (s)'
 _SORT_LIST = 'FUNCTIONS SORTED ON '
+
+_function_re = re.compile(r'\bfu(?:n(?:c(?:t(?:i(?:o(?:n)?)?)?)?)?)?!?\b')
 
 
 class Profile:
@@ -147,9 +151,40 @@ class Profile:
         return ProfileError(msg, str(self.path), self._lineno)
 
     def _map_all(self) -> None:
+        # by defined
+        unknown: Dict[bytes, List[Function]] = {}
         for f in self.functions:
             if f.defined:
                 self._map(self.scripts[f.defined[0]], f.defined[1], f)
+            else:
+                m = hashlib.new('sha512')
+                for l in f.lines:
+                    m.update(l.line.encode('utf-8'))
+                k = m.digest()
+                if k not in unknown:
+                    unknown[k] = []
+                unknown[k].append(f)
+        if not unknown:
+            return
+
+        # by brute force
+        functions = [v[0] for v in unknown.values() if len(v) == 1]
+        for s in self.scripts.values():
+            i = 0
+            while True:
+                sl = s.lines[i]
+                i += 1
+                if i >= len(s.lines):
+                    break
+                elif (sl.count is None
+                      or not _function_re.search(sl.line)):
+                    continue
+                for f in functions:
+                    j = self._map(s, i, f)
+                    if f.mapped:
+                        functions.remove(f)
+                        i = j
+                        break
 
     def _map(self, script: Script, defined: int, function: Function) -> int:
         i = defined

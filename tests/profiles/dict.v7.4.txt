@@ -1,21 +1,22 @@
-SCRIPT  tests/vimfiles/global.vim
+SCRIPT  tests/vimfiles/dict.vim
 Sourced 1 time
-Total time:   0.000693
- Self time:   0.000089
+Total time:   0.000797
+ Self time:   0.000124
 
 count  total (s)   self (s)
-    1              0.000005 function! Today() abort
+    1              0.000019 let s:dict = {}
+                            
+    1              0.000005 function! s:dict.today() abort dict
                               echo strftime('%Y-%m-%d')
                             endfunction
                             
-    1              0.000002 function! Main() abort
+    1              0.000002 function! s:dict.main() abort dict
                               echo 'Hello, world!'
                             endfunction
                             
-    1   0.000637   0.000033 call Main()
+    1   0.000710   0.000037 call s:dict.main()
 
-FUNCTION  Today()
-    Defined: tests/vimfiles/global.vim line 1
+FUNCTION  1()
 Called 0 times
 Total time:   0.000000
  Self time:   0.000000
@@ -23,22 +24,21 @@ Total time:   0.000000
 count  total (s)   self (s)
                               echo strftime('%Y-%m-%d')
 
-FUNCTION  Main()
-    Defined: tests/vimfiles/global.vim line 5
+FUNCTION  2()
 Called 1 time
-Total time:   0.000604
- Self time:   0.000604
+Total time:   0.000673
+ Self time:   0.000673
 
 count  total (s)   self (s)
-    1              0.000603   echo 'Hello, world!'
+    1              0.000671   echo 'Hello, world!'
 
 FUNCTIONS SORTED ON TOTAL TIME
 count  total (s)   self (s)  function
-    1   0.000604             Main()
-                             Today()
+    1   0.000673             2()
+                             1()
 
 FUNCTIONS SORTED ON SELF TIME
 count  total (s)   self (s)  function
-    1              0.000604  Main()
-                             Today()
+    1              0.000673  2()
+                             1()
 

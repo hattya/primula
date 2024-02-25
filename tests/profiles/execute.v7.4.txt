@@ -31,7 +31,6 @@ count  total (s)   self (s)
                             \       ], "\n")
 
 FUNCTION  Toast()
-    Defined: tests/vimfiles/execute.vim line 10
 Called 1 time
 Total time:   0.000099
  Self time:   0.000099
@@ -40,7 +39,6 @@ count  total (s)   self (s)
     1              0.000098   echo 4
 
 FUNCTION  Define()
-    Defined: tests/vimfiles/execute.vim line 11
 Called 2 times
 Total time:   0.000016
  Self time:   0.000016
@@ -49,7 +47,6 @@ count  total (s)   self (s)
     2              0.000015   execute "function! " . a:name . "() abort\n  echo " . a:v . "\nendfunction"
 
 FUNCTION  Beans()
-    Defined: tests/vimfiles/execute.vim line 23
 Called 0 times
 Total time:   0.000000
  Self time:   0.000000
@@ -58,7 +55,6 @@ count  total (s)   self (s)
                               echo 5
 
 FUNCTION  Eggs()
-    Defined: tests/vimfiles/execute.vim line 4
 Called 1 time
 Total time:   0.000099
  Self time:   0.000099
@@ -67,7 +63,6 @@ count  total (s)   self (s)
     1              0.000098   echo 2
 
 FUNCTION  Spam()
-    Defined: tests/vimfiles/execute.vim line -1
 Called 1 time
 Total time:   0.000070
  Self time:   0.000070
@@ -76,7 +71,6 @@ count  total (s)   self (s)
     1              0.000069   echo 1
 
 FUNCTION  Ham()
-    Defined: tests/vimfiles/execute.vim line 10
 Called 1 time
 Total time:   0.000095
  Self time:   0.000095

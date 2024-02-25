@@ -15,7 +15,6 @@ count  total (s)   self (s)
     1   0.000637   0.000033 call Main()
 
 FUNCTION  Today()
-    Defined: tests/vimfiles/global.vim line 1
 Called 0 times
 Total time:   0.000000
  Self time:   0.000000
@@ -24,7 +23,6 @@ count  total (s)   self (s)
                               echo strftime('%Y-%m-%d')
 
 FUNCTION  Main()
-    Defined: tests/vimfiles/global.vim line 5
 Called 1 time
 Total time:   0.000604
  Self time:   0.000604
