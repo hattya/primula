@@ -524,6 +524,213 @@ class CoreTestCase(unittest.TestCase):
                 else:
                     self.assertFalse(f.mapped)
 
+    def test_nested(self):
+        for tag in self.tags:
+            with self.subTest(tag=tag):
+                version_info = self.version_info(tag)
+
+                p = core.Profile(self.profile(f'nested.{tag}.txt'))
+                self.assertEqual(len(p.scripts), 1)
+                self.assertEqual(len(p.functions), 9)
+
+                path = 'tests/vimfiles/nested.vim'
+                s = p.scripts[path]
+                self.assertEqual(s.path, path)
+                self.assertEqual(s.sourced, 1)
+                self.assertGreater(s.total_time, 0.0)
+                self.assertGreater(s.self_time, 0.0)
+                self.assertEqual(self.lines(s), [
+                    (1, 'function! Hop() abort'),
+                    (1, '  function! Step() abort'),
+                    (1, '    function! Jump() abort'),
+                    (1, "      echo 'global'"),
+                    (0, '    endfunction'),
+                    (1, '    call Jump()'),
+                    (0, '  endfunction'),
+                    (1, '  call Step()'),
+                    (0, 'endfunction'),
+                    (0, ''),
+                    (1, 'call Hop()'),
+                    (0, ''),
+                    (1, 'function! s:hop() abort'),
+                    (1, '  function! s:step() abort'),
+                    (1, '    function! s:jump() abort'),
+                    (1, "      echo 'script local'"),
+                    (0, '    endfunction'),
+                    (1, '    call s:jump()'),
+                    (0, '  endfunction'),
+                    (1, '  call s:step()'),
+                    (0, 'endfunction'),
+                    (0, ''),
+                    (1, 'call s:hop()'),
+                    (0, ''),
+                    (1, 'let s:dict = {}'),
+                    (1, 'function! s:dict.hop() abort dict'),
+                    (1, '  function! s:dict.step() abort dict'),
+                    (1, '    function! s:dict.jump() abort dict'),
+                    (1, "      echo 'dict'"),
+                    (0, '    endfunction'),
+                    (1, '    call s:dict.jump()'),
+                    (0, '  endfunction'),
+                    (1, '  call s:dict.step()'),
+                    (0, 'endfunction'),
+                    (0, ''),
+                    (1, 'call s:dict.hop()'),
+                ])
+
+                f = p.functions[3]
+                self.assertEqual(f.name, 'Hop()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 1))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, '  function! Step() abort'),
+                    (1, '    function! Jump() abort'),
+                    (1, "      echo 'global'"),
+                    (0, '    endfunction'),
+                    (1, '    call Jump()'),
+                    (0, '  endfunction'),
+                    (1, '  call Step()'),
+                ])
+                self.assertTrue(f.mapped)
+
+                f = p.functions[4]
+                self.assertEqual(f.name, 'Step()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 2))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, '    function! Jump() abort'),
+                    (1, "      echo 'global'"),
+                    (0, '    endfunction'),
+                    (1, '    call Jump()'),
+                ])
+                self.assertTrue(f.mapped)
+
+                f = p.functions[0]
+                self.assertEqual(f.name, 'Jump()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 3))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, "      echo 'global'"),
+                ])
+                self.assertTrue(f.mapped)
+
+                f = p.functions[6]
+                self.assertEqual(f.name, '<SNR>2_hop()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 13))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, '  function! s:step() abort'),
+                    (1, '    function! s:jump() abort'),
+                    (1, "      echo 'script local'"),
+                    (0, '    endfunction'),
+                    (1, '    call s:jump()'),
+                    (0, '  endfunction'),
+                    (1, '  call s:step()'),
+                ])
+                self.assertTrue(f.mapped)
+
+                f = p.functions[7]
+                self.assertEqual(f.name, '<SNR>2_step()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 14))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, '    function! s:jump() abort'),
+                    (1, "      echo 'script local'"),
+                    (0, '    endfunction'),
+                    (1, '    call s:jump()'),
+                ])
+                self.assertTrue(f.mapped)
+
+                f = p.functions[8]
+                self.assertEqual(f.name, '<SNR>2_jump()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 15))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, "      echo 'script local'"),
+                ])
+                self.assertTrue(f.mapped)
+
+                f = p.functions[1]
+                self.assertEqual(f.name, '1()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 26))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, '  function! s:dict.step() abort dict'),
+                    (1, '    function! s:dict.jump() abort dict'),
+                    (1, "      echo 'dict'"),
+                    (0, '    endfunction'),
+                    (1, '    call s:dict.jump()'),
+                    (0, '  endfunction'),
+                    (1, '  call s:dict.step()'),
+                ])
+                self.assertTrue(f.mapped)
+
+                f = p.functions[2]
+                self.assertEqual(f.name, '2()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 27))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, '    function! s:dict.jump() abort dict'),
+                    (1, "      echo 'dict'"),
+                    (0, '    endfunction'),
+                    (1, '    call s:dict.jump()'),
+                ])
+                self.assertTrue(f.mapped)
+
+                f = p.functions[5]
+                self.assertEqual(f.name, '3()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 28))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, "      echo 'dict'"),
+                ])
+                self.assertTrue(f.mapped)
+
     def test_function_line_mismatch(self):
         with self.tempfile() as path:
             script = 'tests/vimfiles/line_mismatch.vim'

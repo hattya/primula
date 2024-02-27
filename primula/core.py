@@ -7,11 +7,12 @@
 #
 
 from __future__ import annotations
+import collections
 import dataclasses
 import hashlib
 import os
 import re
-from typing import Dict, Iterator, List, Optional, Tuple
+from typing import Deque, Dict, Iterator, List, Optional, Tuple, Union
 
 from ._typing import Path
 from .exception import ProfileError
@@ -165,48 +166,76 @@ class Profile:
                     unknown[k] = []
                 unknown[k].append(f)
         if not unknown:
+            # propagate to nested functions
+            for f in self.functions:
+                assert f.defined is not None
+                s = self.scripts[f.defined[0]]
+                i = 0
+                for sl in s.lines[f.defined[1]:]:
+                    if i >= len(f.lines):
+                        break
+                    elif sl.line.lstrip().startswith('\\'):
+                        continue
+                    fl = f.lines[i]
+                    if fl.count is None:
+                        fl.count, fl.total_time, fl.self_time = sl.count, sl.total_time, sl.self_time
+                    i += 1
             return
 
         # by brute force
         functions = [v[0] for v in unknown.values() if len(v) == 1]
-        for s in self.scripts.values():
+        queue: Deque[Union[Script, Function]] = collections.deque(self.functions)
+        queue.extend(self.scripts.values())
+        rels = {}
+        while queue:
+            b = queue.popleft()
             i = 0
             while True:
-                sl = s.lines[i]
+                bl = b.lines[i]
                 i += 1
-                if i >= len(s.lines):
+                if i >= len(b.lines):
                     break
-                elif (sl.count is None
-                      or not _function_re.search(sl.line)):
+                elif (bl.count is None
+                      or not _function_re.search(bl.line)):
                     continue
                 for f in functions:
-                    j = self._map(s, i, f)
+                    j = self._map(b, i, f)
                     if f.mapped:
                         functions.remove(f)
                         i = j
+                        # relations
+                        rels[f.name] = (b, f)
+                        if (isinstance(b, Function)
+                            and b.name in rels):
+                            # propagate to outer functions
+                            b, f = rels.pop(b.name)
+                            f.mapped = False
+                            queue.appendleft(b)
+                            functions.append(f)
                         break
 
-    def _map(self, script: Script, defined: int, function: Function) -> int:
+    def _map(self, block: Union[Script, Function], defined: int, function: Function) -> int:
         i = defined
         for fl in function.lines:
-            sl = script.lines[i]
+            bl = block.lines[i]
             j = i + 1
-            if sl.line != fl.line:
+            if bl.line != fl.line:
                 # check for line continuation
-                line = sl.line
-                for sl in script.lines[j:]:
-                    next_line = sl.line.lstrip()
+                line = bl.line
+                for bl in block.lines[j:]:
+                    next_line = bl.line.lstrip()
                     if not next_line.startswith('\\'):
                         break
                     line += next_line[1:]
                     j += 1
                 if line != fl.line:
                     # revert
-                    for sl in script.lines[defined:i]:
-                        sl.count = sl.total_time = sl.self_time = None
+                    for bl in block.lines[defined:i]:
+                        bl.count = bl.total_time = bl.self_time = None
                     return -1
-            for sl in script.lines[i:j]:
-                sl.count, sl.total_time, sl.self_time = fl.count, fl.total_time, fl.self_time
+            for bl in block.lines[i:j]:
+                if bl.count is None:
+                    bl.count, bl.total_time, bl.self_time = fl.count, fl.total_time, fl.self_time
             i = j
         else:
             function.mapped = True

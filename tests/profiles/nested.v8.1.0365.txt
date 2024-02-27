@@ -1,0 +1,175 @@
+SCRIPT  tests/vimfiles/nested.vim
+Sourced 1 time
+Total time:   0.001615
+ Self time:   0.000140
+
+count  total (s)   self (s)
+    1              0.000005 function! Hop() abort
+                              function! Step() abort
+                                function! Jump() abort
+                                  echo 'global'
+                                endfunction
+                                call Jump()
+                              endfunction
+                              call Step()
+                            endfunction
+                            
+    1   0.000345   0.000017 call Hop()
+                            
+    1              0.000004 function! s:hop() abort
+                              function! s:step() abort
+                                function! s:jump() abort
+                                  echo 'script local'
+                                endfunction
+                                call s:jump()
+                              endfunction
+                              call s:step()
+                            endfunction
+                            
+    1   0.000918   0.000005 call s:hop()
+                            
+    1              0.000013 let s:dict = {}
+    1              0.000003 function! s:dict.hop() abort dict
+                              function! s:dict.step() abort dict
+                                function! s:dict.jump() abort dict
+                                  echo 'dict'
+                                endfunction
+                                call s:dict.jump()
+                              endfunction
+                              call s:dict.step()
+                            endfunction
+                            
+    1   0.000250   0.000017 call s:dict.hop()
+
+FUNCTION  Jump()
+    Defined: tests/vimfiles/nested.vim line 3
+Called 1 time
+Total time:   0.000304
+ Self time:   0.000304
+
+count  total (s)   self (s)
+    1              0.000303       echo 'global'
+
+FUNCTION  1()
+    Defined: tests/vimfiles/nested.vim line 26
+Called 1 time
+Total time:   0.000233
+ Self time:   0.000009
+
+count  total (s)   self (s)
+    1              0.000001   function! s:dict.step() abort dict
+                                function! s:dict.jump() abort dict
+                                  echo 'dict'
+                                endfunction
+                                call s:dict.jump()
+                              endfunction
+    1   0.000227   0.000003   call s:dict.step()
+
+FUNCTION  2()
+    Defined: tests/vimfiles/nested.vim line 27
+Called 1 time
+Total time:   0.000224
+ Self time:   0.000007
+
+count  total (s)   self (s)
+    1              0.000001     function! s:dict.jump() abort dict
+                                  echo 'dict'
+                                endfunction
+    1   0.000220   0.000004     call s:dict.jump()
+
+FUNCTION  Hop()
+    Defined: tests/vimfiles/nested.vim line 1
+Called 1 time
+Total time:   0.000328
+ Self time:   0.000010
+
+count  total (s)   self (s)
+    1              0.000002   function! Step() abort
+                                function! Jump() abort
+                                  echo 'global'
+                                endfunction
+                                call Jump()
+                              endfunction
+    1   0.000322   0.000004   call Step()
+
+FUNCTION  Step()
+    Defined: tests/vimfiles/nested.vim line 2
+Called 1 time
+Total time:   0.000318
+ Self time:   0.000015
+
+count  total (s)   self (s)
+    1              0.000001     function! Jump() abort
+                                  echo 'global'
+                                endfunction
+    1   0.000315   0.000012     call Jump()
+
+FUNCTION  3()
+    Defined: tests/vimfiles/nested.vim line 28
+Called 1 time
+Total time:   0.000216
+ Self time:   0.000216
+
+count  total (s)   self (s)
+    1              0.000216       echo 'dict'
+
+FUNCTION  <SNR>2_hop()
+    Defined: tests/vimfiles/nested.vim line 13
+Called 1 time
+Total time:   0.000913
+ Self time:   0.000010
+
+count  total (s)   self (s)
+    1              0.000002   function! s:step() abort
+                                function! s:jump() abort
+                                  echo 'script local'
+                                endfunction
+                                call s:jump()
+                              endfunction
+    1   0.000907   0.000003   call s:step()
+
+FUNCTION  <SNR>2_step()
+    Defined: tests/vimfiles/nested.vim line 14
+Called 1 time
+Total time:   0.000904
+ Self time:   0.000010
+
+count  total (s)   self (s)
+    1              0.000001     function! s:jump() abort
+                                  echo 'script local'
+                                endfunction
+    1   0.000901   0.000007     call s:jump()
+
+FUNCTION  <SNR>2_jump()
+    Defined: tests/vimfiles/nested.vim line 15
+Called 1 time
+Total time:   0.000894
+ Self time:   0.000894
+
+count  total (s)   self (s)
+    1              0.000893       echo 'script local'
+
+FUNCTIONS SORTED ON TOTAL TIME
+count  total (s)   self (s)  function
+    1   0.000913   0.000010  <SNR>2_hop()
+    1   0.000904   0.000010  <SNR>2_step()
+    1   0.000894             <SNR>2_jump()
+    1   0.000328   0.000010  Hop()
+    1   0.000318   0.000015  Step()
+    1   0.000304             Jump()
+    1   0.000233   0.000009  1()
+    1   0.000224   0.000007  2()
+    1   0.000216             3()
+
+FUNCTIONS SORTED ON SELF TIME
+count  total (s)   self (s)  function
+    1              0.000894  <SNR>2_jump()
+    1              0.000304  Jump()
+    1              0.000216  3()
+    1   0.000318   0.000015  Step()
+    1   0.000904   0.000010  <SNR>2_step()
+    1   0.000328   0.000010  Hop()
+    1   0.000913   0.000010  <SNR>2_hop()
+    1   0.000233   0.000009  1()
+    1   0.000224   0.000007  2()
+
