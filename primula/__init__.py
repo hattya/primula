@@ -14,3 +14,7 @@ except ImportError:
 
 from .core import *
 from .exception import *
+try:
+    from .plugin import *
+except ImportError:
+    pass

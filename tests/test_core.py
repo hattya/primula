@@ -6,17 +6,15 @@
 #   SPDX-License-Identifier: Apache-2.0
 #
 
-import contextlib
 import os
-import tempfile
 import textwrap
-import unittest
 
 import primula
 from primula import core
+from base import PrimulaTestCase
 
 
-class CoreTestCase(unittest.TestCase):
+class CoreTestCase(PrimulaTestCase):
 
     maxDiff = None
     tags = [
@@ -28,15 +26,6 @@ class CoreTestCase(unittest.TestCase):
 
     def profile(self, name):
         return os.path.join(os.path.dirname(__file__), 'profiles', name)
-
-    @contextlib.contextmanager
-    def tempfile(self):
-        fd, path = tempfile.mkstemp(prefix='primula-')
-        try:
-            os.close(fd)
-            yield path
-        finally:
-            os.unlink(path)
 
     def lines(self, o):
         return [(l.count or 0, l.line) for l in o.lines]
