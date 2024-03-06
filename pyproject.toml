@@ -35,6 +35,9 @@ dynamic = [
     "version",
 ]
 
+[project.scripts]
+primula = "primula.cli:run"
+
 [project.urls]
 Homepage = "https://github.com/hattya/primula"
 
@@ -56,6 +59,9 @@ fallback = {attr = "primula:__version__"}
 
 [tool.coverage.run]
 branch = true
+omit = [
+    "*/__main__.py",
+]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -66,3 +72,10 @@ exclude_lines = [
 [tool.mypy]
 implicit_reexport = true
 strict = true
+
+[[tool.mypy.overrides]]
+module = "primula.cli"
+disable_error_code = [
+    "attr-defined",
+    "misc",
+]
