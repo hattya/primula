@@ -4,7 +4,7 @@ Total time:   0.000088
  Self time:   0.000083
 
 count  total (s)   self (s)
-    1              0.000006 function! Spam(...) abort
+                            function! Spam(...) abort
                               return a:000
                             endfunction
                             

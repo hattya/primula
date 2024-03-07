@@ -4,7 +4,7 @@ Total time:   0.000797
  Self time:   0.000124
 
 count  total (s)   self (s)
-    1              0.000019 let s:dict = {}
+                            let s:dict = {}
                             
     1              0.000005 function! s:dict.today() abort dict
                               echo strftime('%Y-%m-%d')

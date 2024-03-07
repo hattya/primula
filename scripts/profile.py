@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+from typing import List
 import urllib.request
 import zipfile
 
@@ -53,7 +54,7 @@ def profile(ctx: click.Context, verbose: bool) -> None:
                 if path.name.endswith('.v9.0.0000.txt'):
                     prof_ns(path)
                 elif path.name.endswith('.v8.1.0365.txt'):
-                    drop_defined(path)
+                    vim74fy(path)
         except subprocess.CalledProcessError as e:
             ctx.exit(e.returncode)
 
@@ -132,12 +133,25 @@ def prof_ns(path: Path) -> None:
         fp.writelines(data)
 
 
-def drop_defined(path: Path) -> None:
-    data = []
+def vim74fy(path: Path) -> None:
+    data: List[str] = []
     with path.open(encoding='utf-8') as fp:
+        script = totals = False
+        n = 28
         for l in fp:
-            if l.startswith('    Defined:'):
+            if l.startswith(('SCRIPT ', 'FUNCTION ')):
+                while (data
+                       and data[-2][n:].lstrip().startswith('\\')):
+                    del data[-2]
+                script = l.startswith('SCRIPT ')
+            elif l.startswith('    Defined:'):
                 continue
+            elif l.startswith('count '):
+                totals = True
+            elif (script
+                  and totals):
+                l = f'{"":{n}}{l[n:]}'
+                script = totals = False
             data.append(l)
     with replace_name(path, tag='v7.4').open('w', encoding='utf-8', newline='') as fp:
         fp.writelines(data)

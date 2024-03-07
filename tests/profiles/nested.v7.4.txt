@@ -4,7 +4,7 @@ Total time:   0.001615
  Self time:   0.000140
 
 count  total (s)   self (s)
-    1              0.000005 function! Hop() abort
+                            function! Hop() abort
                               function! Step() abort
                                 function! Jump() abort
                                   echo 'global'

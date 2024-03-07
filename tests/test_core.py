@@ -720,6 +720,53 @@ class CoreTestCase(PrimulaTestCase):
                 ])
                 self.assertTrue(f.mapped)
 
+    def test_script_line_mismatch(self):
+        with self.tempdir() as root:
+            path = os.path.join(root, 'profile.txt')
+            script = os.path.join(root, 'line_mismatch.vim')
+            with open(path, 'w') as fp:
+                fp.write(textwrap.dedent(f"""\
+                    SCRIPT  {script}
+                    Sourced 1 time
+                    Total time:   0.000000
+                     Self time:   0.000000
+
+                    count  total (s)   self (s)
+                                                echo 0
+                        1   0.000000   0.000000 echo 1
+
+                    FUNCTIONS SORTED ON TOTAL TIME
+                """))
+                fp.flush()
+
+            for data in (
+                """\
+                    echo 1
+                    echo 2
+                    \\   3
+                """,
+                """\
+                    echo 0
+                    echo 1
+                    \\   2
+                    echo 3
+                    \\   4
+                """,
+            ):
+                with open(script, 'w') as fp:
+                    fp.write(textwrap.dedent(data))
+                    fp.flush()
+
+                p = core.Profile(path)
+                self.assertEqual(len(p.scripts), 1)
+                self.assertEqual(len(p.functions), 0)
+
+                s = p.scripts[script]
+                self.assertEqual(self.lines(s), [
+                    (1, 'echo 0'),
+                    (1, 'echo 1'),
+                ])
+
     def test_function_line_mismatch(self):
         with self.tempfile() as path:
             script = 'tests/vimfiles/line_mismatch.vim'

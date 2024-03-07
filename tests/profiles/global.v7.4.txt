@@ -4,7 +4,7 @@ Total time:   0.000693
  Self time:   0.000089
 
 count  total (s)   self (s)
-    1              0.000005 function! Today() abort
+                            function! Today() abort
                               echo strftime('%Y-%m-%d')
                             endfunction
                             

@@ -35,6 +35,7 @@ _TOTALS_NS = 'count     total (s)      self (s)'
 _SORT_LIST = 'FUNCTIONS SORTED ON '
 
 _function_re = re.compile(r'\bfu(?:n(?:c(?:t(?:i(?:o(?:n)?)?)?)?)?)?!?\b')
+_noexec_line_re = re.compile(r'^\s*(?:$|")')
 
 
 class Profile:
@@ -87,7 +88,31 @@ class Profile:
 
         s = Script(name, sourced, total_time, self_time)
         s.lines.extend(self._parse_lines(col))
+        if s.lines:
+            # Vim 8.0.1206-
+            self._adjust_script(s)
         self.scripts[s.path] = s
+
+    def _adjust_script(self, script: Script) -> None:
+        # first line
+        if (script.lines[0].count is None
+            and not _noexec_line_re.match(script.lines[0].line)):
+            script.lines[0].count = script.sourced
+        # last lines with line continuation
+        try:
+            with open(script.path, encoding='utf-8') as fp:
+                lines = fp.read().splitlines()
+        except OSError:
+            return
+        if (len(lines) > len(script.lines)
+            and lines[-1].lstrip().startswith('\\')):
+            for i, sl in enumerate(script.lines):
+                if sl.line != lines[i]:
+                    return
+            script.lines += (dataclasses.replace(script.lines[-1], line=l) for l in lines[i+1:] if l.lstrip().startswith('\\'))
+            if len(script.lines) != len(lines):
+                # revert
+                script.lines = script.lines[:i+1]
 
     def _parse_function(self, name: str) -> None:
         called = 0

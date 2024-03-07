@@ -4,7 +4,7 @@ Total time:   0.002141
  Self time:   0.001430
 
 count  total (s)   self (s)
-    1   0.002103   0.001393 call autoload#main()
+                            call autoload#main()
 
 SCRIPT  tests/vimfiles/autoload/autoload.vim
 Sourced 1 time
@@ -12,7 +12,7 @@ Total time:   0.000090
  Self time:   0.000090
 
 count  total (s)   self (s)
-    1              0.000015 let s:save_cpo = &cpo
+                            let s:save_cpo = &cpo
     1              0.000009 set cpo&vim
                             
     1              0.000003 function! autoload#today() abort
