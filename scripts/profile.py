@@ -51,9 +51,11 @@ def profile(ctx: click.Context, verbose: bool) -> None:
                 rel_script(profile)
 
             for path in profiles.iterdir():
+                stem = path.stem[:path.stem.rfind('.v')]
                 if path.name.endswith('.v9.0.0000.txt'):
                     prof_ns(path)
-                elif path.name.endswith('.v8.1.0365.txt'):
+                elif (path.name.endswith('.v8.1.0365.txt')
+                      and stem != 'lambda'):
                     vim74fy(path)
         except subprocess.CalledProcessError as e:
             ctx.exit(e.returncode)

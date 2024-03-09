@@ -34,6 +34,8 @@ _TOTALS = 'count  total (s)   self (s)'
 _TOTALS_NS = 'count     total (s)      self (s)'
 _SORT_LIST = 'FUNCTIONS SORTED ON '
 
+_LAMBDA = '<lambda>'
+
 _function_re = re.compile(r'\bfu(?:n(?:c(?:t(?:i(?:o(?:n)?)?)?)?)?)?!?\b')
 _noexec_line_re = re.compile(r'^\s*(?:$|")')
 
@@ -180,7 +182,9 @@ class Profile:
         # by defined
         unknown: Dict[bytes, List[Function]] = {}
         for f in self.functions:
-            if f.defined:
+            if f.name.startswith(_LAMBDA):
+                continue
+            elif f.defined:
                 self._map(self.scripts[f.defined[0]], f.defined[1], f)
             else:
                 m = hashlib.new('sha512')

@@ -89,7 +89,8 @@ class _Coverage(coverage.control.Coverage):
                         paths.append(path)
                     else:
                         for f in p.functions:
-                            if not f.mapped:
+                            if not (f.mapped
+                                    or f.name.startswith(core._LAMBDA)):
                                 self._warn(f'Could not find line for function: {f.name}')
                         profs.append(p)
         try:

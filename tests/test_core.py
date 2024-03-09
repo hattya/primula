@@ -720,6 +720,43 @@ class CoreTestCase(PrimulaTestCase):
                 ])
                 self.assertTrue(f.mapped)
 
+    def test_lambda_expression(self):
+        for tag in self.tags:
+            with self.subTest(tag=tag):
+                version_info = self.version_info(tag)
+
+                if version_info < (7, 4, 2044):
+                    continue
+
+                p = core.Profile(self.profile(f'lambda.{tag}.txt'))
+                self.assertEqual(len(p.scripts), 1)
+                self.assertEqual(len(p.functions), 1)
+
+                path = 'tests/vimfiles/lambda.vim'
+                s = p.scripts[path]
+                self.assertEqual(s.path, path)
+                self.assertEqual(s.sourced, 1)
+                self.assertGreater(s.total_time, 0.0)
+                self.assertGreater(s.self_time, 0.0)
+                self.assertEqual(self.lines(s), [
+                    (1, "let Lambda = {-> 'Hello, world!'}"),
+                    (1, 'echo Lambda()'),
+                ])
+
+                f = p.functions[0]
+                self.assertEqual(f.name, '<lambda>1()')
+                if version_info >= (8, 1, 365):
+                    self.assertEqual(f.defined, (path, 1))
+                else:
+                    self.assertIsNone(f.defined)
+                self.assertEqual(f.called, 1)
+                self.assertGreater(f.total_time, 0.0)
+                self.assertGreater(f.self_time, 0.0)
+                self.assertEqual(self.lines(f), [
+                    (1, "return 'Hello, world!'"),
+                ])
+                self.assertFalse(f.mapped)
+
     def test_script_line_mismatch(self):
         with self.tempdir() as root:
             path = os.path.join(root, 'profile.txt')

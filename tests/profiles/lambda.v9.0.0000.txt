@@ -1,0 +1,26 @@
+SCRIPT  tests/vimfiles/lambda.vim
+Sourced 1 time
+Total time:   0.000106
+ Self time:   0.000106
+
+count  total (s)   self (s)
+    1              0.000020 let Lambda = {-> 'Hello, world!'}
+    1   0.000044   0.000043 echo Lambda()
+
+FUNCTION  <lambda>1()
+    Defined: tests/vimfiles/lambda.vim:1
+Called 1 time
+Total time:   0.000001
+ Self time:   0.000001
+
+count  total (s)   self (s)
+                            return 'Hello, world!'
+
+FUNCTIONS SORTED ON TOTAL TIME
+count  total (s)   self (s)  function
+    1   0.000001             <lambda>1()
+
+FUNCTIONS SORTED ON SELF TIME
+count  total (s)   self (s)  function
+    1              0.000001  <lambda>1()
+
