@@ -1,6 +1,12 @@
 Primula Changelog
 =================
 
+Version 0.2
+-----------
+
+* Customize help topics.
+
+
 Version 0.1
 -----------
 
