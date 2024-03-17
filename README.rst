@@ -3,6 +3,9 @@ Primula
 
 Primula is a code coverage tool for `Vim script`_.
 
+.. image:: https://img.shields.io/pypi/v/primula
+   :target: https://pypi.org/project/primula
+
 .. image:: https://github.com/hattya/primula/actions/workflows/ci.yml/badge.svg
    :target: https://github.com/hattya/primula/actions/workflows/ci.yml
 
@@ -20,7 +23,7 @@ Installation
 
 .. code:: console
 
-   $ pip install git+https://github.com/hattya/primula
+   $ pip install primula
 
 
 Requirements
