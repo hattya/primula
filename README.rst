@@ -6,6 +6,9 @@ Primula is a code coverage tool for `Vim script`_.
 .. image:: https://github.com/hattya/primula/actions/workflows/ci.yml/badge.svg
    :target: https://github.com/hattya/primula/actions/workflows/ci.yml
 
+.. image:: https://ci.appveyor.com/api/projects/status/if338u3j55a8kekm?svg=true
+   :target: https://ci.appveyor.com/project/hattya/primula
+
 .. image:: https://codecov.io/gh/hattya/primula/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/hattya/primula
 
