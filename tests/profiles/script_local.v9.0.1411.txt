@@ -4,14 +4,14 @@ Total time:   0.000732000
  Self time:   0.000132000
 
 count     total (s)      self (s)
-    1                 0.000027000 function! s:today() abort
-                                    echo strftime('%Y-%m-%d')
-                                  endfunction
-                                  
-    1                 0.000003000 function! s:main() abort
-                                    echo 'Hello, world!'
-                                  endfunction
-                                  
+    1              0.000027000 function! s:today() abort
+                              echo strftime('%Y-%m-%d')
+                            endfunction
+                            
+    1              0.000003000 function! s:main() abort
+                              echo 'Hello, world!'
+                            endfunction
+                            
     1   0.000639000   0.000039000 call s:main()
 
 FUNCTION  <SNR>2_main()

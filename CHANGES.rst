@@ -5,6 +5,7 @@ Version 0.2
 -----------
 
 * Customize help topics.
+* Fix support for Vim 9.0.1411+.
 
 
 Version 0.1

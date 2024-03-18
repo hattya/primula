@@ -4,14 +4,14 @@ Total time:   0.000661000
  Self time:   0.000121000
 
 count     total (s)      self (s)
-    1                 0.000021000 function! Today() abort
-                                    echo strftime('%Y-%m-%d')
-                                  endfunction
-                                  
-    1                 0.000002000 function! Main() abort
-                                    echo 'Hello, world!'
-                                  endfunction
-                                  
+    1              0.000021000 function! Today() abort
+                              echo strftime('%Y-%m-%d')
+                            endfunction
+                            
+    1              0.000002000 function! Main() abort
+                              echo 'Hello, world!'
+                            endfunction
+                            
     1   0.000575000   0.000034000 call Main()
 
 FUNCTION  Today()

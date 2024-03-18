@@ -24,41 +24,46 @@ BUILD = ROOT / 'build'
 
 
 @click.command
+@click.option('-m', '--mock', is_flag=True,
+              help='Update mocked profile outputs only.')
 @click.option('-v', '--verbose', is_flag=True,
               help='Show verbose information.')
 @click.pass_context
-def profile(ctx: click.Context, verbose: bool) -> None:
+def profile(ctx: click.Context, mock: bool, verbose: bool) -> None:
     """Update Vim profile outputs."""
 
     profiles = TESTS / 'profiles'
     vimfiles = TESTS / 'vimfiles'
     profiles.mkdir(parents=True, exist_ok=True)
 
-    for tag, version in (
-        ('v9.0.0000', '9.0.0000'),
-        ('v8.1.0365', '8.1.0366'),
-    ):
-        try:
-            vim = setup_vim(version, verbose=verbose)
-            if verbose:
-                click.echo(f'>> profile with Vim {version}')
-            for path in vimfiles.iterdir():
-                if path.suffix != '.vim':
-                    continue
-                profile = profiles / f'{path.stem}.{tag}.txt'
-                os.environ['PROFILE'] = str(profile)
-                subprocess.run((vim, '--clean', '-Nensu', vimfiles / 'vimrc',  '-S', path, '-c', 'q'), check=True)
-                rel_script(profile)
+    if not mock:
+        for tag, version in (
+            ('v9.0.0000', '9.0.0000'),
+            ('v8.1.0365', '8.1.0366'),
+        ):
+            try:
+                vim = setup_vim(version, verbose=verbose)
+                if verbose:
+                    click.echo(f'>> profile with Vim {version}')
+                for path in vimfiles.iterdir():
+                    if path.suffix != '.vim':
+                        continue
+                    profile = profiles / f'{path.stem}.{tag}.txt'
+                    os.environ['PROFILE'] = str(profile)
+                    subprocess.run((vim, '--clean', '-Nensu', vimfiles / 'vimrc',  '-S', path, '-c', 'q'), check=True)
+                    rel_script(profile)
+            except subprocess.CalledProcessError as e:
+                ctx.exit(e.returncode)
 
-            for path in profiles.iterdir():
-                stem = path.stem[:path.stem.rfind('.v')]
-                if path.name.endswith('.v9.0.0000.txt'):
-                    prof_ns(path)
-                elif (path.name.endswith('.v8.1.0365.txt')
-                      and stem != 'lambda'):
-                    vim74fy(path)
-        except subprocess.CalledProcessError as e:
-            ctx.exit(e.returncode)
+    if verbose:
+        click.echo('>> mock profile outputs')
+    for path in profiles.iterdir():
+        stem = path.stem[:path.stem.rfind('.v')]
+        if path.name.endswith('.v9.0.0000.txt'):
+            prof_ns(path)
+        elif (path.name.endswith('.v8.1.0365.txt')
+              and stem != 'lambda'):
+            vim74fy(path)
 
 
 def setup_vim(version: str, verbose: bool = False) -> Path:
@@ -118,13 +123,16 @@ def rel_script(path: Path) -> None:
 def prof_ns(path: Path) -> None:
     data = []
     with path.open(encoding='utf-8') as fp:
-        totals = False
+        script = totals = False
         for l in fp:
-            if totals:
+            if l.startswith('SCRIPT '):
+                script = True
+            elif totals:
                 if l.rstrip(os.linesep):
-                    l = f'{l[:16]}{"000" if l[9] == "." else "   "} {l[17:27]}{"000" if l[20] == "." else "   "} {l[28:]}'
+                    sp = '' if script else '   '
+                    l = f'{l[:16]}{"000" if l[9] == "." else sp} {l[17:27]}{"000" if l[20] == "." else sp} {l[28:]}'
                 else:
-                    totals = False
+                    script = totals = False
             elif l.startswith(('Total ', ' Self ')):
                 l = f'{l.rstrip(os.linesep)}000\n'
             elif l.startswith('count '):

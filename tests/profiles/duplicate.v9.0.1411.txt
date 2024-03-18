@@ -4,14 +4,14 @@ Total time:   0.000124000
  Self time:   0.000111000
 
 count     total (s)      self (s)
-    1                 0.000010000 function! Spam(...) abort
-                                    return a:000
-                                  endfunction
-                                  
-    1                 0.000002000 function! Eggs(...) abort
-                                    return a:000
-                                  endfunction
-                                  
+    1              0.000010000 function! Spam(...) abort
+                              return a:000
+                            endfunction
+                            
+    1              0.000002000 function! Eggs(...) abort
+                              return a:000
+                            endfunction
+                            
     1   0.000051000   0.000038000 call Spam()
 
 FUNCTION  Eggs()

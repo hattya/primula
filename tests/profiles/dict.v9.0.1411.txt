@@ -4,16 +4,16 @@ Total time:   0.001081000
  Self time:   0.000162000
 
 count     total (s)      self (s)
-    1                 0.000022000 let s:dict = {}
-                                  
-    1                 0.000018000 function! s:dict.today() abort dict
-                                    echo strftime('%Y-%m-%d')
-                                  endfunction
-                                  
-    1                 0.000002000 function! s:dict.main() abort dict
-                                    echo 'Hello, world!'
-                                  endfunction
-                                  
+    1              0.000022000 let s:dict = {}
+                            
+    1              0.000018000 function! s:dict.today() abort dict
+                              echo strftime('%Y-%m-%d')
+                            endfunction
+                            
+    1              0.000002000 function! s:dict.main() abort dict
+                              echo 'Hello, world!'
+                            endfunction
+                            
     1   0.000961000   0.000041000 call s:dict.main()
 
 FUNCTION  1()

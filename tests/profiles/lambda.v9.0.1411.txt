@@ -4,7 +4,7 @@ Total time:   0.000106000
  Self time:   0.000106000
 
 count     total (s)      self (s)
-    1                 0.000020000 let Lambda = {-> 'Hello, world!'}
+    1              0.000020000 let Lambda = {-> 'Hello, world!'}
     1   0.000044000   0.000043000 echo Lambda()
 
 FUNCTION  <lambda>1()

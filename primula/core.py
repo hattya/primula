@@ -89,7 +89,7 @@ class Profile:
                 raise self._error('cannot parse SCRIPT')
 
         s = Script(name, sourced, total_time, self_time)
-        s.lines.extend(self._parse_lines(col))
+        s.lines.extend(self._parse_lines(True, col))
         if s.lines:
             # Vim 8.0.1206-
             self._adjust_script(s)
@@ -148,17 +148,27 @@ class Profile:
         f = Function(name, called, total_time, self_time)
         if defined:
             f.defined = (os.path.expanduser(defined[0].lstrip()), max(int(defined[1]), 1))
-        f.lines.extend(self._parse_lines(col))
+        f.lines.extend(self._parse_lines(False, col))
         self.functions.append(f)
 
-    def _parse_lines(self, col: int) -> Iterator[Line]:
+    def _parse_lines(self, script: bool, col: int) -> Iterator[Line]:
+        ns = col == len(_TOTALS_NS)
+        i = len('count')
         while True:
             l = self._readline()
             if not l:
                 break
-            elif not l[col+1:].lstrip().startswith('\\'):
+            elif (script
+                  and ns):
+                if not l[i-1].isdigit():
+                    col = len(_TOTALS)
+                elif not l[i+3].isdigit():
+                    col = l.index(' ', l.index('.'))
+                else:
+                    col = len(_TOTALS_NS)
+
+            if not l[col+1:].lstrip().startswith('\\'):
                 # count
-                i = len('count')
                 s = l[:i].lstrip()
                 count = int(s) if s else None
                 # total time
