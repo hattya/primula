@@ -1,6 +1,12 @@
 Primula Changelog
 =================
 
+Version 0.3
+-----------
+
+* Fix to run with relative paths.
+
+
 Version 0.2
 -----------
 

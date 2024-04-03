@@ -63,11 +63,12 @@ class _CoverageScript(coverage.cmdline.CoverageScript):
         return coverage.cmdline.ERR if proc.returncode else coverage.cmdline.OK
 
     def _which(self, name: str) -> str:
+        parent, name = os.path.split(name)
         cands: List[str] = []
         if sys.platform == 'win32':
             cands += (name + ext for ext in os.environ['PATHEXT'].split(os.pathsep))
         cands.append(name)
-        for p in os.environ['PATH'].split(os.pathsep):
+        for p in (parent,) if parent else os.environ['PATH'].split(os.pathsep):
             for n in cands:
                 path = os.path.join(p, n)
                 if os.path.isfile(path):
