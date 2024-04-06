@@ -4,6 +4,8 @@ Primula Changelog
 Version 0.3
 -----------
 
+Release date: 2024-04-06
+
 * Fix to run with relative paths.
 
 
