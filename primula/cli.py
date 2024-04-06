@@ -66,6 +66,7 @@ class _CoverageScript(coverage.cmdline.CoverageScript):
         parent, name = os.path.split(name)
         cands: List[str] = []
         if sys.platform == 'win32':
+            parent = parent.replace('/', os.sep)
             cands += (name + ext for ext in os.environ['PATHEXT'].split(os.pathsep))
         cands.append(name)
         for p in (parent,) if parent else os.environ['PATH'].split(os.pathsep):

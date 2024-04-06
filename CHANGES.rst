@@ -1,6 +1,12 @@
 Primula Changelog
 =================
 
+Version 0.4
+-----------
+
+* Fix to run with relative paths on Windows.
+
+
 Version 0.3
 -----------
 
