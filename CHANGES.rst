@@ -4,6 +4,8 @@ Primula Changelog
 Version 0.5
 -----------
 
+Release date: 2024-10-14
+
 * Drop Python 3.8 support.
 * Support Python 3.13.
 
