@@ -11,7 +11,6 @@ import os
 from pathlib import Path
 import subprocess
 import sys
-from typing import List
 import urllib.request
 import zipfile
 
@@ -144,7 +143,7 @@ def prof_ns(path: Path) -> None:
 
 
 def vim74fy(path: Path) -> None:
-    data: List[str] = []
+    data: list[str] = []
     with path.open(encoding='utf-8') as fp:
         script = totals = False
         n = 28

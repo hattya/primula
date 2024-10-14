@@ -7,14 +7,9 @@
 #
 
 import os
-import sys
-from typing import TYPE_CHECKING, Union
+from typing import Union
 
 
 __all__ = ['Path']
 
-if (TYPE_CHECKING
-    or sys.version_info >= (3, 9)):
-    Path = Union[str, os.PathLike[str]]
-else:
-    Path = Union[str, os.PathLike]
+Path = Union[str, os.PathLike[str]]

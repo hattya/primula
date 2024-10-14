@@ -29,7 +29,7 @@ Installation
 Requirements
 ------------
 
-- Python 3.8+
+- Python 3.9+
 - coverage 5.0+
 - Vim 7.4+
 

@@ -7,11 +7,12 @@
 #
 
 from __future__ import annotations
+from collections.abc import Iterable
 import optparse
 import os
 import subprocess
 import sys
-from typing import cast, Any, Dict, Iterable, List, Optional, Tuple
+from typing import cast, Any, Optional
 
 import coverage
 import coverage.cmdline
@@ -30,13 +31,13 @@ _ENVIRON = 'PROFILE'
 _PROFILE = 'profile.txt'
 
 
-def run(args: Optional[List[str]] = None) -> None:
+def run(args: Optional[list[str]] = None) -> None:
     sys.exit(coverage.cmdline.main(args))
 
 
 class _CoverageScript(coverage.cmdline.CoverageScript):
 
-    def do_run(self, options: optparse.Values, args: List[str]) -> int:
+    def do_run(self, options: optparse.Values, args: list[str]) -> int:
         if not args:
             coverage.cmdline.show_help("Nothing to do.")
             return coverage.cmdline.ERR
@@ -51,7 +52,7 @@ class _CoverageScript(coverage.cmdline.CoverageScript):
         self.coverage._inorout.warn_conflicting_settings()
         self.coverage._inorout.warn_already_imported_files()
         # options
-        plugin_options = cast('Dict[str, str]', self.coverage.config.get_plugin_options(__package__))
+        plugin_options = cast('dict[str, str]', self.coverage.config.get_plugin_options(__package__))
         name = plugin_options.get('environ') or _ENVIRON
         os.environ[name] = plugin_options.get('profile') or _PROFILE
         try:
@@ -64,7 +65,7 @@ class _CoverageScript(coverage.cmdline.CoverageScript):
 
     def _which(self, name: str) -> str:
         parent, name = os.path.split(name)
-        cands: List[str] = []
+        cands: list[str] = []
         if sys.platform == 'win32':
             parent = parent.replace('/', os.sep)
             cands += (name + ext for ext in os.environ['PATHEXT'].split(os.pathsep))
@@ -105,7 +106,7 @@ class _Coverage(coverage.control.Coverage):
         assert self._data is not None
         file_tracers = {}
         if self.config.branch:
-            arcs: Dict[str, List[Tuple[int, int]]] = {}
+            arcs: dict[str, list[tuple[int, int]]] = {}
             for p in profs:
                 for s in p.scripts.values():
                     file_tracers[s.path] = _FILE_TRACER
@@ -119,7 +120,7 @@ class _Coverage(coverage.control.Coverage):
                     arcs[s.path].append((i, -1))
             self._data.add_arcs(arcs)
         else:
-            lines: Dict[str, List[int]] = {}
+            lines: dict[str, list[int]] = {}
             for p in profs:
                 for s in p.scripts.values():
                     file_tracers[s.path] = _FILE_TRACER
@@ -139,11 +140,11 @@ class _CoverageConfig(coverage.config.CoverageConfig):
         self.__plugins = [__package__]
 
     @property
-    def plugins(self) -> List[str]:
+    def plugins(self) -> list[str]:
         return self.__plugins
 
     @plugins.setter
-    def plugins(self, plugins: List[str]) -> None:
+    def plugins(self, plugins: list[str]) -> None:
         # automatically load primula
         if __package__ not in plugins:
             plugins.append(__package__)

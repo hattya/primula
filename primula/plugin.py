@@ -7,9 +7,10 @@
 #
 
 from __future__ import annotations
+from collections.abc import Iterable
 import os
 import re
-from typing import Any, Dict, Iterable, Optional, Pattern, Set, Union
+from typing import Any, Optional, Union
 
 import coverage
 import coverage.plugin_support
@@ -18,7 +19,7 @@ import coverage.plugin_support
 __all__ = ['coverage_init']
 
 
-def coverage_init(reg: coverage.plugin_support.Plugins, options: Dict[str, Any]) -> None:
+def coverage_init(reg: coverage.plugin_support.Plugins, options: dict[str, Any]) -> None:
     reg.add_file_tracer(VimScriptPlugin(
         cond=_to_bool(options.get('cond'), True),
         end=_to_bool(options.get('end'), False),
@@ -64,11 +65,11 @@ class VimScriptPlugin(coverage.CoveragePlugin):
 
 class _FileReporter(coverage.FileReporter):
 
-    def __init__(self, path: str, noexec_line_re: Pattern[str]) -> None:
+    def __init__(self, path: str, noexec_line_re: re.Pattern[str]) -> None:
         super().__init__(path)
         self._noexec_line_re = noexec_line_re
 
-    def lines(self) -> Set[int]:
+    def lines(self) -> set[int]:
         lines = set()
         for i, l in enumerate(self.source().splitlines(), 1):
             if not (l.lstrip().startswith('\\')

@@ -1,6 +1,12 @@
 Primula Changelog
 =================
 
+Version 0.5
+-----------
+
+* Drop Python 3.8 support.
+
+
 Version 0.4
 -----------
 

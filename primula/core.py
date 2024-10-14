@@ -8,11 +8,12 @@
 
 from __future__ import annotations
 import collections
+from collections.abc import Iterator
 import dataclasses
 import hashlib
 import os
 import re
-from typing import Deque, Dict, Iterator, List, Optional, Tuple, Union
+from typing import Optional, Union
 
 from ._typing import Path
 from .exception import ProfileError
@@ -42,8 +43,8 @@ _noexec_line_re = re.compile(r'^\s*(?:$|")')
 
 class Profile:
 
-    scripts: Dict[str, Script]
-    functions: List[Function]
+    scripts: dict[str, Script]
+    functions: list[Function]
 
     def __init__(self, path: Path) -> None:
         self.path = path
@@ -190,7 +191,7 @@ class Profile:
 
     def _map_all(self) -> None:
         # by defined
-        unknown: Dict[bytes, List[Function]] = {}
+        unknown: dict[bytes, list[Function]] = {}
         for f in self.functions:
             if f.name.startswith(_LAMBDA):
                 continue
@@ -223,7 +224,7 @@ class Profile:
 
         # by brute force
         functions = [v[0] for v in unknown.values() if len(v) == 1]
-        queue: Deque[Union[Script, Function]] = collections.deque(self.functions)
+        queue: collections.deque[Union[Script, Function]] = collections.deque(self.functions)
         queue.extend(self.scripts.values())
         rels = {}
         while queue:
@@ -288,18 +289,18 @@ class Script:
     sourced: int
     total_time: float
     self_time: float
-    lines: List[Line] = dataclasses.field(default_factory=list)
+    lines: list[Line] = dataclasses.field(default_factory=list)
 
 
 @dataclasses.dataclass
 class Function:
 
     name: str
-    defined: Optional[Tuple[str, int]] = dataclasses.field(default=None, init=False)
+    defined: Optional[tuple[str, int]] = dataclasses.field(default=None, init=False)
     called: int
     total_time: Optional[float]
     self_time: Optional[float]
-    lines: List[Line] = dataclasses.field(default_factory=list)
+    lines: list[Line] = dataclasses.field(default_factory=list)
 
     mapped: bool = dataclasses.field(default=False, init=False)
 
