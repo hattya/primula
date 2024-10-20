@@ -76,10 +76,10 @@ class PluginTestCase(PrimulaTestCase):
             fp.flush()
 
         for cond, end, lines in (
-            (False, False, set((1, 3, 4, 6, 8))),
-            (False, True, set((1, 3, 4, 6, 8, 9))),
-            (True, False, set((1, 3, 4, 5, 6, 7, 8))),
-            (True, True, set((1, 3, 4, 5, 6, 7, 8, 9))),
+            (False, False, {1, 3, 4, 6, 8}),
+            (False, True, {1, 3, 4, 6, 8, 9}),
+            (True, False, {1, 3, 4, 5, 6, 7, 8}),
+            (True, True, {1, 3, 4, 5, 6, 7, 8, 9}),
         ):
             with self.subTest(cond=cond, end=end):
                 p = plugin.VimScriptPlugin(cond=cond, end=end)

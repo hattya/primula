@@ -119,7 +119,7 @@ class CliTestCase(PrimulaTestCase):
 
         data = coverage.data.CoverageData()
         data.read()
-        self.assertEqual(data.measured_files(), set([script]))
+        self.assertEqual(data.measured_files(), {script})
         self.assertFalse(data.has_arcs())
         self.assertEqual(data.lines(script), [1, 2, 4, 7, 10, 11, 13])
 
@@ -137,7 +137,7 @@ class CliTestCase(PrimulaTestCase):
 
         data = coverage.data.CoverageData()
         data.read()
-        self.assertEqual(data.measured_files(), set([script]))
+        self.assertEqual(data.measured_files(), {script})
         self.assertTrue(data.has_arcs())
         self.assertEqual(data.arcs(script), [(-1, 1), (1, 2), (3, 4), (6, 7), (8, 10), (10, 11), (11, 13), (13, -1)])
 
@@ -195,7 +195,7 @@ class CliTestCase(PrimulaTestCase):
 
                 data = coverage.data.CoverageData()
                 data.read()
-                self.assertEqual(data.measured_files(), set([script]))
+                self.assertEqual(data.measured_files(), {script})
                 self.assertFalse(data.has_arcs())
                 self.assertEqual(data.lines(script), [1])
 
