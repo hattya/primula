@@ -52,7 +52,7 @@ class _CoverageScript(coverage.cmdline.CoverageScript):
         self.coverage._inorout.warn_conflicting_settings()
         self.coverage._inorout.warn_already_imported_files()
         # options
-        plugin_options = cast('dict[str, str]', self.coverage.config.get_plugin_options(__package__))
+        plugin_options = cast(dict[str, str], self.coverage.config.get_plugin_options(__package__))
         name = plugin_options.get('environ') or _ENVIRON
         os.environ[name] = plugin_options.get('profile') or _PROFILE
         try:
@@ -167,9 +167,11 @@ _parser.remove_option(coverage.cmdline.Opts.module.get_opt_string())
 _parser.remove_option(coverage.cmdline.Opts.pylib.get_opt_string())
 _parser.remove_option(coverage.cmdline.Opts.parallel_mode.get_opt_string())
 _parser.remove_option(coverage.cmdline.Opts.timid.get_opt_string())
+assert _parser.usage is not None
 _parser.set_usage(_parser.usage
                   .replace('pyfile', 'command')
                   .replace('program', 'command'))
+assert _parser.description is not None
 _parser.set_description(_parser.description
                         .replace('Python program', 'command'))
 del _parser
