@@ -1,7 +1,7 @@
 #
 # test_plugin
 #
-#   Copyright (c) 2024 Akinori Hattori <hattya@gmail.com>
+#   Copyright (c) 2024-2025 Akinori Hattori <hattya@gmail.com>
 #
 #   SPDX-License-Identifier: Apache-2.0
 #
@@ -9,6 +9,7 @@
 import os
 import textwrap
 
+import coverage
 import coverage.config
 import coverage.plugin_support
 
@@ -31,7 +32,11 @@ class PluginTestCase(PrimulaTestCase):
         self._dir.cleanup()
 
     def test_coverage_init(self):
-        plugins = coverage.plugin_support.Plugins.load_plugins(['primula'], coverage.config.CoverageConfig(), False)
+        if coverage.version_info >= (7, 7):
+            plugins = coverage.plugin_support.Plugins()
+            plugins.load_from_config(['primula'], coverage.config.CoverageConfig())
+        else:
+            plugins = coverage.plugin_support.Plugins.load_plugins(['primula'], coverage.config.CoverageConfig(), False)
         self.assertEqual(list(plugins.names), ['primula.VimScriptPlugin'])
 
     def test_to_bool(self):
