@@ -1,7 +1,7 @@
 #
 # test_cli
 #
-#   Copyright (c) 2024 Akinori Hattori <hattya@gmail.com>
+#   Copyright (c) 2024-2025 Akinori Hattori <hattya@gmail.com>
 #
 #   SPDX-License-Identifier: Apache-2.0
 #
@@ -20,7 +20,7 @@ from primula import cli
 from base import PrimulaTestCase
 
 
-class CliTestCase(PrimulaTestCase):
+class CLITestCase(PrimulaTestCase):
 
     maxDiff = None
 
@@ -54,7 +54,7 @@ class CliTestCase(PrimulaTestCase):
 
     def test_combine_no_data(self):
         out, err = self.cli('combine')
-        self.assertRegex(out, r'(?i)\bno data\b')
+        self.assertRegex(out, r'(?i)no data to combine')
         self.assertEqual(err, '')
 
     def test_combine_data(self):

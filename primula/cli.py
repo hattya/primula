@@ -1,7 +1,7 @@
 #
 # primula.cli
 #
-#   Copyright (c) 2024 Akinori Hattori <hattya@gmail.com>
+#   Copyright (c) 2024-2025 Akinori Hattori <hattya@gmail.com>
 #
 #   SPDX-License-Identifier: Apache-2.0
 #
@@ -151,17 +151,10 @@ class _CoverageConfig(coverage.config.CoverageConfig):
         self.__plugins = plugins
 
 
-# help
-coverage.cmdline.HELP_TOPICS['help'] = (coverage.cmdline.HELP_TOPICS['help']
-                                        .replace('Coverage.py,', f'{__package__.title()} on coverage.py', 1)
-                                        .replace('Python program', 'Vim script', 1))
-# minimum_help
-coverage.cmdline.HELP_TOPICS['minimum_help'] = (f'Code coverage for Vim script, version {__version__}. '
-                                                + coverage.cmdline.HELP_TOPICS['minimum_help'].split('. ', 1)[1])
-# version
-coverage.cmdline.HELP_TOPICS['version'] = f'{__package__}, version {__version__}'
+_COMMANDS = coverage.cmdline.COMMANDS if coverage.version_info >= (6, 3) else coverage.cmdline.CMDS
+_HELP_TOPICS = coverage.cmdline.HELP_TOPICS
 # run
-_parser = (coverage.cmdline.COMMANDS if coverage.version_info >= (6, 3) else coverage.cmdline.CMDS)['run']
+_parser = _COMMANDS['run']
 _parser.remove_option(coverage.cmdline.Opts.concurrency.get_opt_string())
 _parser.remove_option(coverage.cmdline.Opts.module.get_opt_string())
 _parser.remove_option(coverage.cmdline.Opts.pylib.get_opt_string())
@@ -174,7 +167,17 @@ _parser.set_usage(_parser.usage
 assert _parser.description is not None
 _parser.set_description(_parser.description
                         .replace('Python program', 'command'))
-del _parser
+# help
+_HELP_TOPICS['help'] = (_HELP_TOPICS['help']
+                        .replace('Coverage.py,', f'{__package__.title()} on coverage.py', 1)
+                        .replace('Python program', 'Vim script', 1))
+# minimum_help
+_HELP_TOPICS['minimum_help'] = (f'Code coverage for Vim script, version {__version__}. '
+                                f'{_HELP_TOPICS["minimum_help"].split(". ", 1)[1]}')
+# version
+_HELP_TOPICS['version'] = f'{__package__}, version {__version__}'
+
+del _parser, _HELP_TOPICS, _COMMANDS
 
 coverage.cmdline.CoverageScript = _CoverageScript
 coverage.cmdline.Coverage = _Coverage
