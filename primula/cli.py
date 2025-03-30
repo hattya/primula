@@ -84,6 +84,7 @@ class _Coverage(coverage.control.Coverage):
         paths = []
         profs = []
         if data_paths:
+            self._init()
             for path in data_paths:
                 if os.path.isfile(path):
                     try:

@@ -14,6 +14,7 @@ import sys
 import textwrap
 import warnings
 
+import coverage
 import coverage.data
 
 from primula import cli
@@ -62,8 +63,12 @@ class CLITestCase(PrimulaTestCase):
         with open(path, 'w'):
             pass
         out, err = self.cli('combine', '.', path)
-        self.assertRegex(out, re.escape(path))
-        self.assertEqual(err, '')
+        if coverage.version_info >= (6, 3):
+            self.assertRegex(out, re.escape(path))
+            self.assertEqual(err, '')
+        else:
+            self.assertRegex(out, r'(?i)no usable data files')
+            self.assertRegex(err, re.escape(path))
 
     def test_combine_profile(self):
         path = 'profile.txt'
