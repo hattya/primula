@@ -16,6 +16,7 @@ import warnings
 
 import coverage
 import coverage.data
+import coverage.files
 
 from primula import cli
 from base import PrimulaTestCase
@@ -145,6 +146,86 @@ class CLITestCase(PrimulaTestCase):
         self.assertEqual(data.measured_files(), {script})
         self.assertTrue(data.has_arcs())
         self.assertEqual(data.arcs(script), [(-1, 1), (1, 2), (3, 4), (6, 7), (8, 10), (10, 11), (11, 13), (13, -1)])
+
+    def test_lcov(self):
+        path = 'profile.txt'
+        script = coverage.files.abs_file('spam.vim')
+        with open(path, 'w') as fp:
+            fp.write(textwrap.dedent(f"""\
+                SCRIPT  {script}
+                Sourced 1 time
+                Total time:   0.000000
+                 Self time:   0.000000
+
+                count  total (s)   self (s)
+                   11              0.000000 for s:i in range(10)
+                   10              0.000000   if s:i % 2 == 0
+                    5              0.000000     echo 'even'
+                    5              0.000000   else
+                    5              0.000000     echo 'odd'
+                   10              0.000000   endif
+                   11              0.000000 endfor
+
+                FUNCTIONS SORTED ON TOTAL TIME
+            """))
+            fp.flush()
+        with open(script, 'w') as fp:
+            fp.write(textwrap.dedent("""\
+                for s:i in range(10)
+                  if s:i % 2 == 0
+                    echo 'even'
+                  else
+                    echo 'odd'
+                  endif
+                endfor
+            """))
+            fp.flush()
+
+        out, err = self.cli('combine', path)
+        self.assertEqual(out, '')
+        self.assertEqual(err, '')
+
+        out, err = self.cli('lcov')
+        if coverage.version_info >= (6, 1):
+            self.assertRegex(out, re.escape(cli._LCOV_OUTPUT))
+        else:
+            self.assertEqual(out, '')
+        self.assertEqual(err, '')
+        with open(cli._LCOV_OUTPUT) as fp:
+            self.assertEqual(fp.read(), textwrap.dedent("""\
+                TN:
+                SF:spam.vim
+                DA:1,11
+                DA:2,10
+                DA:3,5
+                DA:4,5
+                DA:5,5
+                LF:5
+                LH:5
+                end_of_record
+            """))
+
+        os.unlink(path)
+
+        out, err = self.cli('lcov')
+        if coverage.version_info >= (6, 1):
+            self.assertRegex(out, re.escape(cli._LCOV_OUTPUT))
+        else:
+            self.assertEqual(out, '')
+        self.assertEqual(err, '')
+        with open(cli._LCOV_OUTPUT) as fp:
+            self.assertEqual(fp.read(), textwrap.dedent("""\
+                TN:
+                SF:spam.vim
+                DA:1,1
+                DA:2,1
+                DA:3,1
+                DA:4,1
+                DA:5,1
+                LF:5
+                LH:5
+                end_of_record
+            """))
 
     def test_run_without_args(self):
         out, err = self.cli('run')

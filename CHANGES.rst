@@ -5,6 +5,7 @@ Version 0.6
 -----------
 
 * Fix for coverage.py 7.2-.
+* Add new command lcov.
 
 
 Version 0.5

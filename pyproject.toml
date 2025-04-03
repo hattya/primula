@@ -67,6 +67,7 @@ omit = [
 exclude_lines = [
     "pragma: no cover",
     "except ImportError:",
+    "if coverage.version_info",
 ]
 
 [tool.mypy]
@@ -78,6 +79,7 @@ module = "primula.cli"
 disable_error_code = [
     "attr-defined",
     "misc",
+    "no-redef",
 ]
 
 [tool.ruff]

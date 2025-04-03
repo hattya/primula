@@ -12,14 +12,19 @@ import optparse
 import os
 import subprocess
 import sys
-from typing import cast, Any, Optional
+from typing import cast, no_type_check, Any, Optional, Union
 
 import coverage
 import coverage.cmdline
 import coverage.config
 import coverage.control
+try:
+    import coverage.report_core as coverage_report
+except ImportError:
+    import coverage.report as coverage_report
 
-from . import __version__, core, plugin
+from . import __version__, core, lcov, plugin
+from ._typing import MorF
 from .exception import ProfileError
 
 
@@ -29,6 +34,7 @@ _FILE_TRACER = f'{__package__}.{plugin.VimScriptPlugin.__name__}'
 # defaults values
 _ENVIRON = 'PROFILE'
 _PROFILE = 'profile.txt'
+_LCOV_OUTPUT = 'lcov.info'
 
 
 def run(args: Optional[list[str]] = None) -> None:
@@ -36,6 +42,16 @@ def run(args: Optional[list[str]] = None) -> None:
 
 
 class _CoverageScript(coverage.cmdline.CoverageScript):
+
+    if coverage.version_info < (6, 3):
+        @no_type_check
+        def command_line(self, argv: list[str]) -> int:
+            if (argv
+                and argv[0] == 'lcov'):
+                argv[0] = 'xml'
+                coverage.cmdline.CMDS['xml'] = coverage.cmdline.CMDS['lcov']
+                coverage.cmdline.Coverage.xml_report = coverage.cmdline.Coverage.lcov_report
+            return super().command_line(argv)
 
     def do_run(self, options: optparse.Values, args: list[str]) -> int:
         if not args:
@@ -133,6 +149,24 @@ class _Coverage(coverage.control.Coverage):
             self._data.add_lines(lines)
         self._data.add_file_tracers(file_tracers)
 
+    def lcov_report(self, morfs: Optional[Iterable[MorF]] = None,
+                    outfile: Optional[str] = None, ignore_errors: Optional[bool] = None,
+                    omit: Optional[Union[str, list[str]]] = None, include: Optional[Union[str, list[str]]] = None,
+                    contexts: Optional[list[str]] = None, skip_empty: Optional[bool] = None) -> float:
+        outfile = outfile or _LCOV_OUTPUT
+        plugin_options = cast(dict[str, str], self.config.get_plugin_options(__package__))
+        try:
+            p = core.Profile(plugin_options.get('profile') or _PROFILE)
+        except (OSError, ProfileError):
+            p = None
+        with coverage.control.override_config(self,
+                                              ignore_errors=ignore_errors,
+                                              report_omit=omit,
+                                              report_include=include,
+                                              report_contexts=contexts):
+            return coverage_report.render_report(outfile, lcov.LCOVReporter(self, p), morfs,
+                                                 *(self._message,) if coverage.version_info >= (6, 1) else ())
+
 
 class _CoverageConfig(coverage.config.CoverageConfig):
 
@@ -152,8 +186,40 @@ class _CoverageConfig(coverage.config.CoverageConfig):
         self.__plugins = plugins
 
 
+if coverage.version_info < (6, 3):
+    import copy
+
+    coverage.cmdline.Opts.output_lcov = _option = copy.copy(coverage.cmdline.Opts.output_xml)
+    assert _option.help is not None
+    _option.help = (_option.help
+                    .replace('XML', 'LCOV')
+                    .replace('coverage.xml', _LCOV_OUTPUT))
+    del _option
+
 _COMMANDS = coverage.cmdline.COMMANDS if coverage.version_info >= (6, 3) else coverage.cmdline.CMDS
 _HELP_TOPICS = coverage.cmdline.HELP_TOPICS
+# lcov
+_COMMANDS['lcov'] = _parser = coverage.cmdline.CmdOptionParser(
+    'lcov',
+    [
+        opt for a in [
+            'datafle_input',  # 7.3.3+
+            'input_datafile', # 6.3    ... 7.3.2
+            'fail_under',
+            'ignore_errors',
+            'include',
+            'omit',
+            'output_lcov',
+            'quiet',          # 6.1+
+        ]
+        if (opt := getattr(coverage.cmdline.Opts, a, None))
+    ] + coverage.cmdline.GLOBAL_ARGS,
+    usage='[options] [modules]',
+    description='Generate an LCOV report of coverage results.',
+)
+if coverage.version_info < (6, 3):
+    _parser.set_defaults(action='xml')
+    _HELP_TOPICS['help'] = _HELP_TOPICS['help'].replace('  report', f'  lcov        {_parser.description}\n            report')
 # run
 _parser = _COMMANDS['run']
 _parser.remove_option(coverage.cmdline.Opts.concurrency.get_opt_string())
