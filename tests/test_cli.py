@@ -16,7 +16,6 @@ import warnings
 
 import coverage
 import coverage.data
-import coverage.files
 
 from primula import cli
 from base import PrimulaTestCase
@@ -73,7 +72,7 @@ class CLITestCase(PrimulaTestCase):
 
     def test_combine_profile(self):
         path = 'profile.txt'
-        script = os.path.abspath('spam.vim')
+        script = os.path.realpath('spam.vim')
         with open(path, 'w') as fp:
             fp.write(textwrap.dedent(f"""\
                 SCRIPT  {script}
@@ -149,7 +148,7 @@ class CLITestCase(PrimulaTestCase):
 
     def test_lcov(self):
         path = 'profile.txt'
-        script = coverage.files.abs_file('spam.vim')
+        script = os.path.realpath('spam.vim')
         with open(path, 'w') as fp:
             fp.write(textwrap.dedent(f"""\
                 SCRIPT  {script}
@@ -254,7 +253,7 @@ class CLITestCase(PrimulaTestCase):
                     fp.flush()
 
                 profile = profile or cli._PROFILE
-                script = os.path.abspath('spam.vim')
+                script = os.path.realpath('spam.vim')
                 with open(profile, 'w') as fp:
                     fp.write(textwrap.dedent(f"""\
                         SCRIPT  {script}
@@ -297,8 +296,8 @@ class CLITestCase(PrimulaTestCase):
 
         profile = 'profile.txt'
         scripts = [
-            os.path.abspath('spam.vim'),
-            os.path.abspath('eggs.vim'),
+            os.path.realpath('spam.vim'),
+            os.path.realpath('eggs.vim'),
         ]
         with open(profile, 'w') as fp:
             fp.write(textwrap.dedent(f"""\

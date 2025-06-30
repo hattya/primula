@@ -11,7 +11,6 @@ import os
 import textwrap
 
 import coverage.cmdline
-import coverage.files
 
 from primula import cli, core, lcov
 from base import PrimulaTestCase
@@ -49,7 +48,7 @@ class LCOVTestCase(PrimulaTestCase):
 
     def test_report(self):
         path = 'profile.txt'
-        script = coverage.files.abs_file('spam.vim')
+        script = os.path.realpath('spam.vim')
         with open(path, 'w') as fp:
             fp.write(textwrap.dedent(f"""\
                 SCRIPT  {script}

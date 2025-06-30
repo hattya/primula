@@ -2,7 +2,7 @@
 #
 # profile
 #
-#   Copyright (c) 2024 Akinori Hattori <hattya@gmail.com>
+#   Copyright (c) 2024-2025 Akinori Hattori <hattya@gmail.com>
 #
 #   SPDX-License-Identifier: Apache-2.0
 #
@@ -57,11 +57,10 @@ def profile(ctx: click.Context, mock: bool, verbose: bool) -> None:
     if verbose:
         click.echo('>> mock profile outputs')
     for path in profiles.iterdir():
-        stem = path.stem[:path.stem.rfind('.v')]
         if path.name.endswith('.v9.0.0000.txt'):
             prof_ns(path)
         elif (path.name.endswith('.v8.1.0365.txt')
-              and stem != 'lambda'):
+              and path.stem[:path.stem.rfind('.v')] != 'lambda'):
             vim74fy(path)
 
 

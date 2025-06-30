@@ -1,7 +1,7 @@
 #
 # primula.core
 #
-#   Copyright (c) 2024 Akinori Hattori <hattya@gmail.com>
+#   Copyright (c) 2024-2025 Akinori Hattori <hattya@gmail.com>
 #
 #   SPDX-License-Identifier: Apache-2.0
 #
@@ -216,8 +216,7 @@ class Profile:
                         break
                     elif sl.line.lstrip().startswith('\\'):
                         continue
-                    fl = f.lines[i]
-                    if fl.count is None:
+                    if (fl := f.lines[i]).count is None:
                         fl.count, fl.total_time, fl.self_time = sl.count, sl.total_time, sl.self_time
                     i += 1
             return

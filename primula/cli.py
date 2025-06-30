@@ -88,8 +88,7 @@ class _CoverageScript(coverage.cmdline.CoverageScript):
         cands.append(name)
         for p in (parent,) if parent else os.environ['PATH'].split(os.pathsep):
             for n in cands:
-                path = os.path.join(p, n)
-                if os.path.isfile(path):
+                if os.path.isfile(path := os.path.join(p, n)):
                     return path
         raise coverage.CoverageException(f'Could not find command: {name}')
 
