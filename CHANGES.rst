@@ -4,6 +4,8 @@ Primula Changelog
 Version 0.6
 -----------
 
+Release date: 2025-07-06
+
 * Fix for coverage.py 7.2-.
 * Add new command lcov.
 
