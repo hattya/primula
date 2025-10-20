@@ -18,6 +18,7 @@ import coverage
 import coverage.cmdline
 import coverage.config
 import coverage.control
+import coverage.env
 try:
     import coverage.report_core as coverage_report
 except ImportError:
@@ -248,3 +249,5 @@ del _parser, _HELP_TOPICS, _COMMANDS
 coverage.cmdline.CoverageScript = _CoverageScript
 coverage.cmdline.Coverage = _Coverage
 coverage.cmdline.CoverageConfig = coverage.config.CoverageConfig = _CoverageConfig
+
+coverage.env.SYSMON_DEFAULT = False

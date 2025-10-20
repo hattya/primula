@@ -1,6 +1,12 @@
 Primula Changelog
 =================
 
+Version 0.7
+-----------
+
+* Support Python 3.14.
+
+
 Version 0.6
 -----------
 
