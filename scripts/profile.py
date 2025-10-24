@@ -76,8 +76,8 @@ def setup_vim(version: str, verbose: bool = False) -> Path:
         if not path.exists():
             if verbose:
                 click.echo(f'>> fetch Vim {version}')
-            with urllib.request.urlopen(f'{repo}/releases/download/v{version}/gvim_{version}_x64.zip') as resp, \
-                 path.open('wb') as fp:
+            with (urllib.request.urlopen(f'{repo}/releases/download/v{version}/gvim_{version}_x64.zip') as resp,
+                  path.open('wb') as fp):
                 fp.write(resp.read())
         # unpack
         if not vim.exists():

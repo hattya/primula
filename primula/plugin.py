@@ -1,7 +1,7 @@
 #
 # primula.plugin
 #
-#   Copyright (c) 2024 Akinori Hattori <hattya@gmail.com>
+#   Copyright (c) 2024-2025 Akinori Hattori <hattya@gmail.com>
 #
 #   SPDX-License-Identifier: Apache-2.0
 #
@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 import os
 import re
-from typing import Any, Optional, Union
+from typing import Any
 
 import coverage
 import coverage.plugin_support
@@ -26,7 +26,7 @@ def coverage_init(reg: coverage.plugin_support.Plugins, options: dict[str, Any])
     ))
 
 
-def _to_bool(s: Optional[str] = None, default: bool = False) -> bool:
+def _to_bool(s: str | None = None, default: bool = False) -> bool:
     return s.lower() not in ('', '0', 'false', 'no', 'off') if s is not None else default
 
 
@@ -53,7 +53,7 @@ class VimScriptPlugin(coverage.CoveragePlugin):
             pat.append(fr'\b(?:{"|".join(cmds)})\b')
         self._noexec_line_re = re.compile(fr'^\s*(?:{"|".join(pat)})')
 
-    def file_reporter(self, path: str) -> Union[coverage.FileReporter, str]:
+    def file_reporter(self, path: str) -> coverage.FileReporter | str:
         return _FileReporter(path, self._noexec_line_re)
 
     def find_executable_files(self, path: str) -> Iterable[str]:

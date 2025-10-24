@@ -9,7 +9,7 @@
 from __future__ import annotations
 from collections.abc import Iterable
 import sys
-from typing import IO, Optional
+from typing import IO
 
 import coverage.control
 import coverage.report
@@ -26,13 +26,13 @@ class LCOVReporter:
 
     report_type = "LCOV report"
 
-    def __init__(self, coverage: coverage.control.Coverage, profile: Optional[core.Profile]) -> None:
+    def __init__(self, coverage: coverage.control.Coverage, profile: core.Profile | None) -> None:
         self.coverage = coverage
         self.config = coverage.config
         self.total = coverage_results.Numbers(self.config.precision)
         self.profile = profile
 
-    def report(self, morfs: Optional[Iterable[MorF]], outfile: IO[str]) -> float:
+    def report(self, morfs: Iterable[MorF] | None, outfile: IO[str]) -> float:
         self.coverage.get_data()
         outfile = outfile or sys.stdout
         for fr, analysis in sorted(coverage.report.get_analysis_to_report(self.coverage, morfs),

@@ -12,7 +12,7 @@ import optparse
 import os
 import subprocess
 import sys
-from typing import cast, no_type_check, Any, Optional, Union
+from typing import cast, no_type_check, Any
 
 import coverage
 import coverage.cmdline
@@ -38,7 +38,7 @@ _PROFILE = 'profile.txt'
 _LCOV_OUTPUT = 'lcov.info'
 
 
-def run(args: Optional[list[str]] = None) -> None:
+def run(args: list[str] | None = None) -> None:
     sys.exit(coverage.cmdline.main(args))
 
 
@@ -96,7 +96,7 @@ class _CoverageScript(coverage.cmdline.CoverageScript):
 
 class _Coverage(coverage.control.Coverage):
 
-    def combine(self, data_paths: Optional[Iterable[str]] = None, *args: Any, **kwargs: Any) -> None:
+    def combine(self, data_paths: Iterable[str] | None = None, *args: Any, **kwargs: Any) -> None:
         paths = []
         profs = []
         if data_paths:
@@ -149,10 +149,10 @@ class _Coverage(coverage.control.Coverage):
             self._data.add_lines(lines)
         self._data.add_file_tracers(file_tracers)
 
-    def lcov_report(self, morfs: Optional[Iterable[MorF]] = None,
-                    outfile: Optional[str] = None, ignore_errors: Optional[bool] = None,
-                    omit: Optional[Union[str, list[str]]] = None, include: Optional[Union[str, list[str]]] = None,
-                    contexts: Optional[list[str]] = None, skip_empty: Optional[bool] = None) -> float:
+    def lcov_report(self, morfs: Iterable[MorF] | None = None,
+                    outfile: str | None = None, ignore_errors: bool | None = None,
+                    omit: str | list[str] | None = None, include: str | list[str] | None = None,
+                    contexts: list[str] | None = None, skip_empty: bool | None = None) -> float:
         outfile = outfile or _LCOV_OUTPUT
         plugin_options = cast(dict[str, str], self.config.get_plugin_options(__package__))
         try:

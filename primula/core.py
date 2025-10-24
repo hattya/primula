@@ -13,7 +13,6 @@ import dataclasses
 import hashlib
 import os
 import re
-from typing import Optional, Union
 
 from ._typing import Path
 from .exception import ProfileError
@@ -223,7 +222,7 @@ class Profile:
 
         # by brute force
         functions = [v[0] for v in unknown.values() if len(v) == 1]
-        queue: collections.deque[Union[Script, Function]] = collections.deque(self.functions)
+        queue: collections.deque[Script | Function] = collections.deque(self.functions)
         queue.extend(self.scripts.values())
         rels = {}
         while queue:
@@ -253,7 +252,7 @@ class Profile:
                             functions.append(f)
                         break
 
-    def _map(self, block: Union[Script, Function], defined: int, function: Function) -> int:
+    def _map(self, block: Script | Function, defined: int, function: Function) -> int:
         i = defined
         for fl in function.lines:
             bl = block.lines[i]
@@ -295,10 +294,10 @@ class Script:
 class Function:
 
     name: str
-    defined: Optional[tuple[str, int]] = dataclasses.field(default=None, init=False)
+    defined: tuple[str, int] | None = dataclasses.field(default=None, init=False)
     called: int
-    total_time: Optional[float]
-    self_time: Optional[float]
+    total_time: float | None
+    self_time: float | None
     lines: list[Line] = dataclasses.field(default_factory=list)
 
     mapped: bool = dataclasses.field(default=False, init=False)
@@ -307,7 +306,7 @@ class Function:
 @dataclasses.dataclass
 class Line:
 
-    count: Optional[int]
-    total_time: Optional[float]
-    self_time: Optional[float]
+    count: int | None
+    total_time: float | None
+    self_time: float | None
     line: str

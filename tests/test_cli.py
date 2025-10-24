@@ -38,8 +38,8 @@ class CLITestCase(PrimulaTestCase):
     def cli(self, *args):
         out = io.StringIO()
         err = io.StringIO()
-        with contextlib.redirect_stdout(out), \
-             contextlib.redirect_stderr(err):
+        with (contextlib.redirect_stdout(out),
+              contextlib.redirect_stderr(err)):
             try:
                 cli.run(list(args))
             except SystemExit:

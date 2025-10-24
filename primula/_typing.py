@@ -8,10 +8,10 @@
 
 import os
 import types
-from typing import Union
+from typing import TypeAlias
 
 
 __all__ = ['MorF', 'Path']
 
-MorF = Union[types.ModuleType, str]
-Path = Union[str, os.PathLike[str]]
+MorF: TypeAlias = types.ModuleType | str
+Path: TypeAlias = str | os.PathLike[str]

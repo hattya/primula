@@ -5,6 +5,7 @@ Version 0.7
 -----------
 
 * Support Python 3.14.
+* Drop Python 3.9 support.
 
 
 Version 0.6
