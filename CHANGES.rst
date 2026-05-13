@@ -1,6 +1,12 @@
 Primula Changelog
 =================
 
+Version 0.8
+-----------
+
+* Fix for coverage.py 7.13.5+.
+
+
 Version 0.7
 -----------
 

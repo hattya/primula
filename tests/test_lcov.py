@@ -1,7 +1,7 @@
 #
 # test_lcov
 #
-#   Copyright (c) 2025 Akinori Hattori <hattya@gmail.com>
+#   Copyright (c) 2025-2026 Akinori Hattori <hattya@gmail.com>
 #
 #   SPDX-License-Identifier: Apache-2.0
 #
@@ -34,7 +34,9 @@ class LCOVTestCase(PrimulaTestCase):
         Opts = coverage.cmdline.Opts
         parser = (coverage.cmdline.COMMANDS if coverage.version_info >= (6, 3) else coverage.cmdline.CMDS)['lcov']
 
-        if coverage.version_info >= (7, 3, 3):
+        if coverage.version_info >= (7, 13, 5):
+            self.assertTrue(parser.has_option(Opts.datafile_input.get_opt_string()))
+        elif coverage.version_info >= (7, 3, 3):
             self.assertTrue(parser.has_option(Opts.datafle_input.get_opt_string()))
         elif coverage.version_info >= (6, 3):
             self.assertTrue(parser.has_option(Opts.input_datafile.get_opt_string()))

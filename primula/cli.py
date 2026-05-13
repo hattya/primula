@@ -1,7 +1,7 @@
 #
 # primula.cli
 #
-#   Copyright (c) 2024-2025 Akinori Hattori <hattya@gmail.com>
+#   Copyright (c) 2024-2026 Akinori Hattori <hattya@gmail.com>
 #
 #   SPDX-License-Identifier: Apache-2.0
 #
@@ -203,8 +203,9 @@ _COMMANDS['lcov'] = _parser = coverage.cmdline.CmdOptionParser(
     'lcov',
     [
         opt for a in [
+            'datafile_input', # 7.13.5+
             'datafle_input',  # 7.3.3+
-            'input_datafile', # 6.3    ... 7.3.2
+            'input_datafile', # 6.3     ... 7.3.2
             'fail_under',
             'ignore_errors',
             'include',
