@@ -1,7 +1,7 @@
 #
 # test_cli
 #
-#   Copyright (c) 2024-2025 Akinori Hattori <hattya@gmail.com>
+#   Copyright (c) 2024-2026 Akinori Hattori <hattya@gmail.com>
 #
 #   SPDX-License-Identifier: Apache-2.0
 #
@@ -63,7 +63,10 @@ class CLITestCase(PrimulaTestCase):
         with open(path, 'w'):
             pass
         out, err = self.cli('combine', '.', path)
-        if coverage.version_info >= (6, 3):
+        if coverage.version_info >= (7, 14):
+            self.assertRegex(out, 'Combined 1 file')
+            self.assertEqual(err, '')
+        elif coverage.version_info >= (6, 3):
             self.assertRegex(out, re.escape(path))
             self.assertEqual(err, '')
         else:
