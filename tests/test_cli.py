@@ -64,8 +64,10 @@ class CLITestCase(PrimulaTestCase):
             pass
         out, err = self.cli('combine', '.', path)
         if coverage.version_info >= (7, 14):
-            self.assertRegex(out, 'Combined 1 file')
-            self.assertEqual(err, '')
+            if coverage.version_info < (7, 14, 2):
+                out, err = err, out
+            self.assertEqual(out, '')
+            self.assertRegex(err, 'Combined 1 file')
         elif coverage.version_info >= (6, 3):
             self.assertRegex(out, re.escape(path))
             self.assertEqual(err, '')
@@ -188,6 +190,8 @@ class CLITestCase(PrimulaTestCase):
         self.assertEqual(err, '')
 
         out, err = self.cli('lcov')
+        if coverage.version_info >= (7, 14, 2):
+            out, err = err, out
         if coverage.version_info >= (6, 1):
             self.assertRegex(out, re.escape(cli._LCOV_OUTPUT))
         else:
@@ -210,6 +214,8 @@ class CLITestCase(PrimulaTestCase):
         os.unlink(path)
 
         out, err = self.cli('lcov')
+        if coverage.version_info >= (7, 14, 2):
+            out, err = err, out
         if coverage.version_info >= (6, 1):
             self.assertRegex(out, re.escape(cli._LCOV_OUTPUT))
         else:
