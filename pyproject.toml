@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "setuptools >= 77.0",
-    "scmver[toml] >= 1.7",
+    "scmver >= 1.7",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -18,7 +18,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -27,7 +26,7 @@ classifiers = [
     "Topic :: Software Development :: Testing",
     "Typing :: Typed",
 ]
-requires-python = ">= 3.10"
+requires-python = ">= 3.11"
 dependencies = [
     "coverage >= 5.0",
 ]

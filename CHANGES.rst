@@ -5,6 +5,7 @@ Version 0.8
 -----------
 
 * Fix for coverage.py 7.13.5+.
+* Drop Python 3.10 support.
 
 
 Version 0.7
