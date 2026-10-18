@@ -4,6 +4,8 @@ Primula Changelog
 Version 0.8
 -----------
 
+Release date: 2026-10-18
+
 * Fix for coverage.py 7.13.5+.
 * Drop Python 3.10 support.
 * Support Python 3.15.
